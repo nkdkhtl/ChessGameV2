@@ -19,19 +19,25 @@ import utils.StyledButton;
 
 public class GameOverPanel extends JPanel {
 	private Board board;
+	JPanel rematchPanel = new JPanel();
 	JPanel buttonPanel = new JPanel();
 	JLabel winnerLabel = new JLabel();
-	JPanel rematchPanel = new JPanel();
+	JLabel reasonLabel = new JLabel();
     public GameOverPanel(Board board, String winner) {
         this.board = board;
         setLayout(new GridBagLayout());
         buttonPanel.setLayout(new GridLayout(3, 1, 10, 10));
         setOpaque(false);
         buttonPanel.setOpaque(false);
+        
         winnerLabel.setFont(new Font("Arial", Font.BOLD, 30));
-        winnerLabel.setForeground(Color.WHITE);
+        winnerLabel.setForeground(Color.white);
         winnerLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
+        reasonLabel.setFont(new Font("Arial", Font.BOLD, 15));
+        reasonLabel.setForeground(new Color(235,236,208));
+        reasonLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        
         StyledButton rematchButton = new StyledButton("Rematch", new Color(140, 200, 75), new Color(120, 180, 60), Color.WHITE);
         StyledButton homeButton = new StyledButton("Return to Menu", new Color(60, 60, 60), new Color(80, 80, 80), Color.WHITE);
         StyledButton exitButton = new StyledButton("Exit", new Color(60, 60, 60), new Color(80, 80, 80), Color.WHITE);
@@ -48,15 +54,20 @@ public class GameOverPanel extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.insets = new Insets(2, 10, 2, 10);
         add(winnerLabel, gbc);
 
         gbc.gridy = 1;
+        gbc.insets = new Insets(2, 10, 10, 10);
+        add(reasonLabel,gbc);
+        
+        gbc.gridy = 2;
         add(buttonPanel, gbc);
     }
     
-    public void showResult(String result) {
+    public void showResult(String result,String reason) {
     	winnerLabel.setText(result);
+    	reasonLabel.setText(reason);
         setVisible(true);
     }
     

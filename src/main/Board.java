@@ -64,8 +64,8 @@ public class Board extends JPanel {
 	    timerPanel.setBounds(720, 50, 160, 100);
 	    this.add(timerPanel);
 	    
-	    whiteTimer = new ChessTimer(this,timerPanel, true, 1);
-	    blackTimer = new ChessTimer(this,timerPanel, false, 1);
+	    whiteTimer = new ChessTimer(this,timerPanel, true, 10);
+	    blackTimer = new ChessTimer(this,timerPanel, false, 10);
 		
 	    addPieces();
 	    gameOverPanel = new GameOverPanel(this,"");
@@ -95,6 +95,8 @@ public class Board extends JPanel {
 			moveKing(move);
 		}
 		
+		
+		
 		move.piece.col = move.newCol;
 		move.piece.row = move.newRow;
 		move.piece.xPos = move.newCol * SQUARE_SIZE;
@@ -104,7 +106,8 @@ public class Board extends JPanel {
 		
 		capture(move.capture);
 		
-
+		checkFinder.updateFiftyMoveCounter(move);
+		
 	    if (!firstMoveMade) {
 	        firstMoveMade = true;
 	        whiteTimer.stop();
@@ -282,10 +285,10 @@ public class Board extends JPanel {
 //		pieceList.add(new Pawn(this,true,7,6));
 //		pieceList.add(new Rook(this,true,0,7));
 //		pieceList.add(new Rook(this,true,7,7));
-//		pieceList.add(new Knight(this,true,1,7));
-//		pieceList.add(new Knight(this,true,6,7));
-//		pieceList.add(new Bishop(this,true,5,7));
-//		pieceList.add(new Bishop(this,true,2,7));
+		pieceList.add(new Knight(this,true,1,7));
+		pieceList.add(new Knight(this,true,6,7));
+		pieceList.add(new Bishop(this,true,5,7));
+		pieceList.add(new Bishop(this,true,2,7));
 		pieceList.add(new Queen(this,true,3,7));
 		pieceList.add(new King(this,true,4,7));
 				
@@ -300,33 +303,60 @@ public class Board extends JPanel {
 //		pieceList.add(new Pawn(this,false,7,1));
 //		pieceList.add(new Rook(this,false,0,0));
 //		pieceList.add(new Rook(this,false,7,0));
-//		pieceList.add(new Knight(this,false,1,0));
-//		pieceList.add(new Knight(this,false	,6,0));
-//		pieceList.add(new Bishop(this,false,5,0));
-//		pieceList.add(new Bishop(this,false,2,0));
-//		pieceList.add(new Queen(this,false,3,0));
+		pieceList.add(new Knight(this,false,1,0));
+		pieceList.add(new Knight(this,false	,6,0));
+		pieceList.add(new Bishop(this,false,5,0));
+		pieceList.add(new Bishop(this,false,2,0));
+		pieceList.add(new Queen(this,false,3,0));
 		pieceList.add(new King(this,false,4,0));
 	}
 	
 	public void updateGame() {
-        Piece king = findKing(isWhiteToMove);
-        
-        if (checkFinder.isStalemate(isWhiteToMove)) {
-            isGameOver = true;
-            input.disableMouseInput();
-            gameOverPanel.showResult("Stalemate!");
-        }
-        
-        if (checkFinder.isGameOver(king)) {
-            isGameOver = true;
-            input.disableMouseInput();
-            String result = isWhiteToMove ? "Black" : "White";
-            gameOverPanel.showResult(result + " Wins!");
-            return;
-        }
-        
-        
-    }
+	    Piece king = findKing(isWhiteToMove);
+	    
+	    String boardState = checkFinder.getBoardState(this);
+	    checkFinder.recordPosition(boardState);
+	    
+	    if (checkFinder.isCheckmate(king)) {
+	    	if (checkFinder.isKingInCheck(new Movements(this,king,king.col,king.row))) {
+	    		String result = isWhiteToMove ? "Black" : "White";
+	    		endGame(result + " Wins!","Checkmate");
+	    	} 
+	    }
+	    
+	    if (checkFinder.isTimeout(isWhiteToMove)) {
+	    	String result = isWhiteToMove ? "Black" : "White";
+	    	endGame(result +" Wins!","Timeout");
+	    }
+	    
+	    if (checkFinder.isStalemate(king)) {
+	    	if (!checkFinder.isKingInCheck(new Movements(this,king,king.col,king.row))) {
+	    		endGame("Stalemate!","No legal move");
+	    	} 
+	    }
+	    
+	    
+	    
+	    if (checkFinder.isInsufficientMaterial()) {
+	    	endGame("Stalemate!","Insufficient Material");
+	    }
+	    
+	    if (checkFinder.isThreefoldRepetition()) {
+	        endGame("Stalemate!","Threefold Repetition");
+	    }
+	    
+	    if (checkFinder.isFiftyMoveRule()) {
+	    	endGame("Stalemate!","50 Move Rule");
+	    }
+	}
+
+	private void endGame(String message,String reason) {
+	    isGameOver = true;
+	    whiteTimer.stop(); 
+        blackTimer.stop();
+	    input.disableMouseInput();
+	    gameOverPanel.showResult(message,reason);
+	}
     
     public void resetBoard() {
         pieceList.clear();
@@ -338,10 +368,9 @@ public class Board extends JPanel {
         isGameOver = false;
         
         
-        whiteTimer.reset(1); // Reset White's timer
-        blackTimer.reset(1); // Reset Black's timer
-        whiteTimer.stop();  // Start White's timer again
-        blackTimer.stop();
+        whiteTimer.reset(10); // Reset White's timer
+        blackTimer.reset(10); // Reset Black's timer
+        
         
         input.enableMouseInput();
         gameOverPanel.reset();
