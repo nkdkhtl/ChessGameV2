@@ -18,6 +18,7 @@ import panels.TimerPanel;
 import pieces.Bishop;
 import pieces.King;
 import pieces.Knight;
+import pieces.Pawn;
 import pieces.Piece;
 import pieces.Queen;
 import pieces.Rook;
@@ -281,15 +282,15 @@ public class Board extends JPanel {
 //		pieceList.add(new Pawn(this,true,3,6));
 //		pieceList.add(new Pawn(this,true,4,6));
 //		pieceList.add(new Pawn(this,true,5,6));
-//		pieceList.add(new Pawn(this,true,6,6));
+		pieceList.add(new Pawn(this,true,6,6));
 //		pieceList.add(new Pawn(this,true,7,6));
 //		pieceList.add(new Rook(this,true,0,7));
 //		pieceList.add(new Rook(this,true,7,7));
-		pieceList.add(new Knight(this,true,1,7));
-		pieceList.add(new Knight(this,true,6,7));
-		pieceList.add(new Bishop(this,true,5,7));
-		pieceList.add(new Bishop(this,true,2,7));
-		pieceList.add(new Queen(this,true,3,7));
+//		pieceList.add(new Knight(this,true,1,7));
+//		pieceList.add(new Knight(this,true,6,7));
+//		pieceList.add(new Bishop(this,true,5,7));
+//		pieceList.add(new Bishop(this,true,2,7));
+//		pieceList.add(new Queen(this,true,3,7));
 		pieceList.add(new King(this,true,4,7));
 				
 		//black
@@ -303,11 +304,11 @@ public class Board extends JPanel {
 //		pieceList.add(new Pawn(this,false,7,1));
 //		pieceList.add(new Rook(this,false,0,0));
 //		pieceList.add(new Rook(this,false,7,0));
-		pieceList.add(new Knight(this,false,1,0));
-		pieceList.add(new Knight(this,false	,6,0));
-		pieceList.add(new Bishop(this,false,5,0));
-		pieceList.add(new Bishop(this,false,2,0));
-		pieceList.add(new Queen(this,false,3,0));
+//		pieceList.add(new Knight(this,false,1,0));
+//		pieceList.add(new Knight(this,false	,6,0));
+//		pieceList.add(new Bishop(this,false,5,0));
+//		pieceList.add(new Bishop(this,false,2,0));
+//		pieceList.add(new Queen(this,false,3,0));
 		pieceList.add(new King(this,false,4,0));
 	}
 	
