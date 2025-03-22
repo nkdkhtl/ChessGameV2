@@ -8,7 +8,7 @@ import javax.imageio.ImageIO;
 import main.Board;
 import main.Type;
 
-public class Piece {
+public class Piece implements Cloneable {
 	public Type type;
 	
 	public int  col,row;

@@ -7,11 +7,15 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
+import java.util.Stack;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import bot.Bot;
+import bot.EasyBot;
+import bot.HardBot;
 import panels.GameOverPanel;
 import panels.PromotionPanel;
 import panels.TimerPanel;
@@ -23,62 +27,116 @@ import pieces.Piece;
 import pieces.Queen;
 import pieces.Rook;
 import utils.ChessTimer;
+import utils.StyledButton;
 
 public class Board extends JPanel {
 	public static final int SQUARE_SIZE = 80;
 	public static final int BOARD_RADIUS = 40;
 	int cols = 8;
 	int rows = 8;
-	
-	ArrayList<Piece> pieceList = new ArrayList<>();
-	
+	public String initFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+	public ArrayList<Piece> pieceList = new ArrayList<>();
+		
 	public Piece selectedPiece;
+	
+	private Stack<String> moveHistory = new Stack<>();
 	
 	ArrayList<Point> validMoves = new ArrayList<>();
 	
 	public MouseInput input = new MouseInput(this);
-	
-	public int enPassantSquare = -1;
 	
 	public CheckFinder checkFinder = new CheckFinder(this);
 	
 	
 	public ChessTimer whiteTimer;
 	public ChessTimer blackTimer;
-	private boolean isWhiteToMove = true;
-	private boolean isGameOver = false;
+	
+	//state
+	protected boolean isWhiteToMove = true;
+	
+	private Bot bot;
+    private boolean isBotPlaying = false;
+    private boolean isHardMode = false;
+    private boolean botMakingMove = false;
+	private boolean isPromoting = false;
+	public boolean isGameOver = false;
 	
 	private boolean firstMoveMade = false;
 	
+	protected boolean whiteKingSideCastle = true;
+	protected boolean whiteQueenSideCastle = true;
+	protected boolean blackKingSideCastle = true;
+	protected boolean blackQueenSideCastle = true;
+	
+	private int fullMoveNumber = 1; 
+	
+	public int enPassantSquare = -1;
+	
 	private GameOverPanel gameOverPanel;
 	private TimerPanel timerPanel;
-
-
+	private Movements lastMove;
+	
+	private StyledButton homeButton;
+	private StyledButton exitButton;
 	public Board() {
+		this.setOpaque(true);
+		this.setBackground(Color.RED);
 		this.setPreferredSize(new Dimension(cols * SQUARE_SIZE, rows * SQUARE_SIZE));
 	    this.setLayout(null);  // No layout manager
 	    this.addMouseListener(input);
 	    this.addMouseMotionListener(input);
 	    this.setOpaque(false);
-	    
 	    timerPanel = new TimerPanel();
 	    timerPanel.setBounds(720, 50, 160, 100);
 	    this.add(timerPanel);
 	    
-	    whiteTimer = new ChessTimer(this,timerPanel, true, 10);
-	    blackTimer = new ChessTimer(this,timerPanel, false, 10);
+	    whiteTimer = new ChessTimer(this,timerPanel, true, 1);
+	    blackTimer = new ChessTimer(this,timerPanel, false, 1);
 		
-	    addPieces();
+	    addPieces(initFEN);
+	    
+        homeButton = new StyledButton("Return to Menu", new Color(60, 60, 60), new Color(80, 80, 80), Color.WHITE);
+        exitButton = new StyledButton("Exit", new Color(60, 60, 60), new Color(80, 80, 80), Color.WHITE);
+	    
+	    homeButton.setBounds(720, 200, 160, 40);
+        exitButton.setBounds(720, 250, 160, 40);
+	    
+        homeButton.addActionListener(_ -> {
+            System.out.println("Return to Menu Clicked!");
+            Main.showMenu();
+        });
+        exitButton.addActionListener(_ -> {
+            System.out.println("Exit Clicked!");
+            System.exit(0);
+        });
+        
+        this.add(homeButton);
+        this.add(exitButton);
+        
+	    
+        
 	    gameOverPanel = new GameOverPanel(this,"");
 	    gameOverPanel.setBounds(0, 0, cols * SQUARE_SIZE, rows * SQUARE_SIZE);
         gameOverPanel.setVisible(false); 
         this.add(gameOverPanel);
+        this.setComponentZOrder(gameOverPanel, 0);
+        
+        
         
 	}
 	
 	
+	public void enableBot(boolean isBotPlaying, boolean isHardMode, boolean isWhiteBot) {
+	    this.isBotPlaying = true;
+	    if (isHardMode) {
+	        this.bot = new HardBot(this, true, isWhiteBot);
+	    } else {
+	        this.bot = new EasyBot(this, false, isWhiteBot);
+	    }
+	}
+	
+	
 	public Piece getPiece(int col,int row) {
-		
 		for (Piece p : pieceList) {
 			if (p.col == col && p.row == row) {
 				return p;
@@ -88,15 +146,34 @@ public class Board extends JPanel {
 		return null;
 	}
 	
+	public boolean hasPiece(int col, int row) {
+        return getPiece(col, row) != null;
+    }
+
+	public void makeBotMove() {
+        if (bot == null || isGameOver) return;
+        new java.util.Timer().schedule(new java.util.TimerTask() {
+            @Override
+            public void run() {
+            	if (!isPromoting) {
+            		Movements move = bot.getMove();
+                    if (move != null) {
+                        makeMove(move);
+                    }
+            	}
+            }
+        }, 500); // Add delay for realism
+    }
+	
 	public void makeMove(Movements move) {
+		if (isGameOver || isPromoting) return;
+		setLastMove(move); 
 		
 		if (move.piece.type == Type.PAWN) {
 			movePawn(move);
 		} else if (move.piece.type == Type.KING) {
 			moveKing(move);
 		}
-		
-		
 		
 		move.piece.col = move.newCol;
 		move.piece.row = move.newRow;
@@ -107,7 +184,7 @@ public class Board extends JPanel {
 		
 		capture(move.capture);
 		
-		checkFinder.updateFiftyMoveCounter(move);
+		checkFinder.updatehalfMoveClock(move);
 		
 	    if (!firstMoveMade) {
 	        firstMoveMade = true;
@@ -115,26 +192,96 @@ public class Board extends JPanel {
 	        blackTimer.start();  // Start Black's timer after White moves
 	    } else {
 	        // Normal timer switching after the first move
-	        if (isWhiteToMove) {
+	    	if (isWhiteToMove) {
 	            whiteTimer.stop();
 	            blackTimer.start();
 	        } else {
-	            blackTimer.stop();
+		        blackTimer.stop();
 	            whiteTimer.start();
-	        }
+	        }	
 	    }
 
-	    
-		isWhiteToMove = !isWhiteToMove;
+	    isWhiteToMove = !isWhiteToMove;
 
-		
-		updateGame();
-		
-		selectedPiece = null;
+        moveHistory.add(Movements.generateFEN(this));
+        checkFinder.recordPosition(Movements.generateFEN(this));
+        
+        
+        updateGame();
+        
+        selectedPiece = null;
         validMoves.clear();
         repaint();
         
+        if (isBotPlaying && isWhiteToMove == bot.isWhiteBot) {
+        	makeBotMove();
+        }
+        
 	}
+	
+	public void undoMove() {
+	    if (!moveHistory.isEmpty()) {
+	        String lastFEN = moveHistory.pop();
+	        checkFinder.removePosition(lastFEN);
+
+	        // Restore the previous board state
+	        String previousFEN = moveHistory.isEmpty() ? initFEN : moveHistory.peek();
+	        addPieces(previousFEN);
+
+	        if (lastMove != null) {
+	            // Restore captured piece (if any)
+	            if (lastMove.capture != null) {
+	                pieceList.add(lastMove.capture);
+	            }
+
+	            // Restore special moves
+	            if (lastMove.piece.type == Type.KING && Math.abs(lastMove.oldCol - lastMove.newCol) == 2) {
+	                // Undo castling
+	                if (lastMove.newCol == 6) { // King-side castle
+	                    Piece rook = getPiece(5, lastMove.piece.row);
+	                    if (rook != null) rook.col = 7;
+	                } else if (lastMove.newCol == 2) { // Queen-side castle
+	                    Piece rook = getPiece(3, lastMove.piece.row);
+	                    if (rook != null) rook.col = 0;
+	                }
+	            }
+
+	            if (lastMove.piece.type == Type.PAWN && lastMove.newCol != lastMove.oldCol && lastMove.capture == null) {
+	                // Undo en passant
+	                int rowOffset = lastMove.piece.isWhite ? -1 : 1;
+	                Piece enPassantPawn = new Pawn(this, !lastMove.piece.isWhite, lastMove.newCol, lastMove.newRow + rowOffset);
+	                pieceList.add(enPassantPawn);
+	            }
+	        }
+
+	        isWhiteToMove = !isWhiteToMove;
+	        updateGame();
+	        selectedPiece = null;
+	        validMoves.clear();
+	        repaint();
+	    }
+	}
+	
+
+	
+	public void setLastMove(Movements move) {
+	    this.lastMove = move;
+	}
+
+	public Movements getLastMove() {
+	    return lastMove;
+	}
+	
+	public void updateFullMoveNumber(boolean isWhite) {
+	    if (!isWhite) { // Increment only after Black moves
+	        fullMoveNumber++;
+	    }
+	}
+	
+	public int getFullmoveNumber() {
+	    return fullMoveNumber;
+	}
+
 	
 	public void moveKing(Movements move) {
 		if (Math.abs(move.piece.col - move.newCol) == 2) {
@@ -142,12 +289,25 @@ public class Board extends JPanel {
 			if (move.piece.col < move.newCol) {
 				rook = getPiece(7,move.piece.row);
 				rook.col = 5;
+				whiteKingSideCastle = false;
+	            blackKingSideCastle = false;
 			} else {
 				rook = getPiece(0,move.piece.row);
 				rook.col = 3;
+				whiteQueenSideCastle = false;
+		        blackQueenSideCastle = false;
 			}
 			rook.xPos = rook.col * SQUARE_SIZE;
 		}
+		
+		// King has moved, disable castling for this color
+	    if (move.piece.isWhite) {
+	        whiteKingSideCastle = false;
+	        whiteQueenSideCastle = false;
+	    } else {
+	        blackKingSideCastle = false;
+	        blackQueenSideCastle = false;
+	    }
 	}
 	
 	public void movePawn(Movements move) {
@@ -156,6 +316,7 @@ public class Board extends JPanel {
 		
 		if (getSquareNum(move.newCol,move.newRow) == enPassantSquare) {
 			move.capture = getPiece(move.newCol,move.newRow + colorIdx);
+			
 		}
 		
 		if (Math.abs(move.piece.row - move.newRow) == 2) {
@@ -170,6 +331,7 @@ public class Board extends JPanel {
 		colorIdx = move.piece.isWhite? 0:7;
 		if (move.newRow == colorIdx) {
 			promotion(move);
+			return;
 		}
 		
 		move.piece.col = move.newCol;
@@ -186,7 +348,9 @@ public class Board extends JPanel {
         repaint();
 	}
 	
+
 	private void promotion(Movements move) {
+		isPromoting = true;
 	    SwingUtilities.invokeLater(() -> {
 	        PromotionPanel panel = new PromotionPanel((JFrame) SwingUtilities.getWindowAncestor(this), move.piece.isWhite);
 	        String choice = panel.getSelectedPiece();
@@ -211,6 +375,8 @@ public class Board extends JPanel {
 	        pieceList.remove(move.piece);
 	        pieceList.add(newPiece);
 	        capture(move.capture);
+	        isPromoting = false;
+	        makeBotMove();
 	        updateGame();
 	        repaint();
 	    });
@@ -239,85 +405,47 @@ public class Board extends JPanel {
 	
 	public boolean isValidMove(Movements move) {
 		
-		if (isGameOver) {
-			return false;
-		}
-		
-		if (move.piece.isWhite != isWhiteToMove) {
-			return false;
-		}
-		
-		if (isSameTeam(move.piece,move.capture)) {
-			return false;
-		}
-		
-		if (!move.piece.isValidMovement(move.newCol,move.newRow)) {
-			return false;
-		}
-		
-		if (move.piece.isCollide(move.newCol, move.newRow)) {
-			return false;
-		}
-		
-		if (checkFinder.isKingInCheck(move)) {
-			return false;
-		}
-		
-		if (move.newCol < 0 || move.newCol >= cols || move.newRow < 0 || move.newRow >= rows) {
-	        return false;
-	    }
-		
-		return true;
+		if (isGameOver || move.piece.isWhite != isWhiteToMove) return false;
+        if (hasPiece(move.newCol, move.newRow) && isSameTeam(move.piece, getPiece(move.newCol, move.newRow))) return false;
+        if (!move.piece.isValidMovement(move.newCol, move.newRow) || move.piece.isCollide(move.newCol, move.newRow)) return false;
+        return !checkFinder.isKingInCheck(move);
 	}
 	
 	public int getSquareNum(int col,int row) {
 		return row*rows + col;
 	}
 	
-	public void addPieces() {
-		//white
-//		pieceList.add(new Pawn(this,true,0,6));  
-//		pieceList.add(new Pawn(this,true,1,6));
-//		pieceList.add(new Pawn(this,true,2,6));
-//		pieceList.add(new Pawn(this,true,3,6));
-//		pieceList.add(new Pawn(this,true,4,6));
-//		pieceList.add(new Pawn(this,true,5,6));
-		pieceList.add(new Pawn(this,true,6,6));
-//		pieceList.add(new Pawn(this,true,7,6));
-//		pieceList.add(new Rook(this,true,0,7));
-//		pieceList.add(new Rook(this,true,7,7));
-//		pieceList.add(new Knight(this,true,1,7));
-//		pieceList.add(new Knight(this,true,6,7));
-//		pieceList.add(new Bishop(this,true,5,7));
-//		pieceList.add(new Bishop(this,true,2,7));
-//		pieceList.add(new Queen(this,true,3,7));
-		pieceList.add(new King(this,true,4,7));
-				
-		//black
-//		pieceList.add(new Pawn(this,false,0,1));
-//		pieceList.add(new Pawn(this,false,1,1));
-//		pieceList.add(new Pawn(this,false,2,1));
-//		pieceList.add(new Pawn(this,false,3,1));
-//		pieceList.add(new Pawn(this,false,4,1));
-//		pieceList.add(new Pawn(this,false,5,1));
-//		pieceList.add(new Pawn(this,false,6,1));
-//		pieceList.add(new Pawn(this,false,7,1));
-//		pieceList.add(new Rook(this,false,0,0));
-//		pieceList.add(new Rook(this,false,7,0));
-//		pieceList.add(new Knight(this,false,1,0));
-//		pieceList.add(new Knight(this,false	,6,0));
-//		pieceList.add(new Bishop(this,false,5,0));
-//		pieceList.add(new Bishop(this,false,2,0));
-//		pieceList.add(new Queen(this,false,3,0));
-		pieceList.add(new King(this,false,4,0));
+	public void addPieces(String boardFen) {
+	    pieceList.clear(); // Clear any existing pieces
+
+	    String fen = boardFen;  
+	    String[] fenParts = fen.split(" ");
+	    String boardSetup = fenParts[0]; // The first part of FEN represents the board layout
+
+	    String[] rows = boardSetup.split("/");
+	    for (int rank = 0; rank < 8; rank++) {
+	        int file = 0; // Column counter
+	        for (char c : rows[rank].toCharArray()) {
+	            if (Character.isDigit(c)) {
+	                file += Character.getNumericValue(c); // Skip empty squares
+	            } else {
+	                boolean isWhite = Character.isUpperCase(c);
+	                switch (Character.toLowerCase(c)) {
+	                    case 'p' -> pieceList.add(new Pawn(this, isWhite, file, rank));
+	                    case 'r' -> pieceList.add(new Rook(this, isWhite, file, rank));
+	                    case 'n' -> pieceList.add(new Knight(this, isWhite, file, rank));
+	                    case 'b' -> pieceList.add(new Bishop(this, isWhite, file, rank));
+	                    case 'q' -> pieceList.add(new Queen(this, isWhite, file, rank));
+	                    case 'k' -> pieceList.add(new King(this, isWhite, file, rank));
+	                }
+	                file++; // Move to the next square
+	            }
+	        }
+	    }
 	}
 	
 	public void updateGame() {
 	    Piece king = findKing(isWhiteToMove);
-	    
-	    String boardState = checkFinder.getBoardState(this);
-	    checkFinder.recordPosition(boardState);
-	    
 	    if (checkFinder.isCheckmate(king)) {
 	    	if (checkFinder.isKingInCheck(new Movements(this,king,king.col,king.row))) {
 	    		String result = isWhiteToMove ? "Black" : "White";
@@ -330,14 +458,6 @@ public class Board extends JPanel {
 	    	endGame(result +" Wins!","Timeout");
 	    }
 	    
-	    if (checkFinder.isStalemate(king)) {
-	    	if (!checkFinder.isKingInCheck(new Movements(this,king,king.col,king.row))) {
-	    		endGame("Stalemate!","No legal move");
-	    	} 
-	    }
-	    
-	    
-	    
 	    if (checkFinder.isInsufficientMaterial()) {
 	    	endGame("Stalemate!","Insufficient Material");
 	    }
@@ -349,6 +469,15 @@ public class Board extends JPanel {
 	    if (checkFinder.isFiftyMoveRule()) {
 	    	endGame("Stalemate!","50 Move Rule");
 	    }
+	    
+	    if (checkFinder.isStalemate(king)) {
+	    	if (!checkFinder.isKingInCheck(new Movements(this,king,king.col,king.row))) {
+	    		endGame("Stalemate!","No legal move");
+	    	} 
+	    }
+	    
+	    
+	    
 	}
 
 	private void endGame(String message,String reason) {
@@ -357,11 +486,12 @@ public class Board extends JPanel {
         blackTimer.stop();
 	    input.disableMouseInput();
 	    gameOverPanel.showResult(message,reason);
+	    return;
 	}
     
     public void resetBoard() {
         pieceList.clear();
-        addPieces();
+        addPieces(initFEN);
         selectedPiece = null;
         validMoves.clear();
         enPassantSquare = -1;
@@ -378,10 +508,6 @@ public class Board extends JPanel {
         repaint();
     }
     
-    
-    public void returnToHome() {
-        Main.showMenu();
-    }
 
 	
 	public void paintComponent(Graphics g) {

@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 
 import panels.GameMenuPanel;
+import panels.GameModePanel;
 import utils.BackgroundPanel;
 
 public class Main {
@@ -34,8 +35,8 @@ public class Main {
         frame.setIconImage(icon.getImage());
     }
 
-     static void showMenu() {
-        GameMenuPanel menuPanel = new GameMenuPanel(() -> startGame());
+     public static void showMenu() {
+    	GameMenuPanel menuPanel = new GameMenuPanel();
         frame.getContentPane().removeAll(); // Clear previous components
         
         backgroundPanel = new BackgroundPanel("/background/pixel_background.jpg");
@@ -45,8 +46,17 @@ public class Main {
         frame.revalidate();
         frame.repaint();
     }
+     
+     public static void showGameMode() {
+    	 GameModePanel modePanel = new GameModePanel();
+         frame.getContentPane().removeAll();
+         frame.setContentPane(backgroundPanel);
+         frame.add(modePanel);
+         frame.revalidate();
+         frame.repaint();
+     }
 
-    private static void startGame() {
+    public static void startGame(boolean isBotPlaying, boolean isHardMode) {
     	frame.getContentPane().removeAll(); // Clear menu
 
         JLayeredPane layeredPane = new JLayeredPane();
@@ -64,6 +74,10 @@ public class Main {
    	    Board board = new Board();
    	    board.setBounds(20, 20, boardSize, boardSize); // Adjust based on your chessboard size
    	    layeredPane.add(board, Integer.valueOf(1)); // Higher z-index
+   	    
+   	    if (isBotPlaying) {
+   	    	board.enableBot(true, isHardMode, false); // Enable EasyBot or HardBot
+   	    }
    	    
    	    frame.revalidate();
         frame.repaint();

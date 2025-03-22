@@ -10,10 +10,11 @@ import java.awt.Insets;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import main.Main;
 import utils.StyledButton;
 
 public class GameMenuPanel extends JPanel {
-    public GameMenuPanel(Runnable startGameCallback) {
+    public GameMenuPanel() {
         setLayout(new GridBagLayout());
         setBackground(new Color(30, 30, 30, 200));
         GridBagConstraints gbc = new GridBagConstraints();
@@ -34,7 +35,7 @@ public class GameMenuPanel extends JPanel {
         StyledButton playButton = new StyledButton("Play", new Color(140, 200, 75), new Color(120, 180, 60), Color.WHITE);
         playButton.setFont(new Font("Arial", Font.PLAIN, 18));
         playButton.setPreferredSize(new Dimension(145,40));
-        playButton.addActionListener(e -> startGameCallback.run());
+        playButton.addActionListener(e -> Main.showGameMode());
 
         gbc.gridy = 3;
         gbc.insets = new Insets(10, 100, 10, 100);

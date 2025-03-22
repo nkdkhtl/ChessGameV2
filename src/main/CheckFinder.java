@@ -6,15 +6,16 @@ import pieces.Piece;
 
 public class CheckFinder {
 	Board board;
-	public int fiftyMoveCounter = 0;
-	private HashMap<String, Integer> positionHistory = new HashMap<>();
+	public static int halfMoveClock = 0;
+	HashMap<String, Integer> positionHistory = new HashMap<>();
 	
 	public CheckFinder(Board board) {
 		this.board = board;
 	}
 	
-	
-
+	public static int getHalfMoveClock() { 
+		return halfMoveClock;
+	}
 	
 	public boolean isKingInCheck(Movements move) {
 		Piece king = board.findKing(move.piece.isWhite);
@@ -28,19 +29,23 @@ public class CheckFinder {
 			kingRow = move.newRow;
 		}
 		
-		return checkByRook(move.newCol,move.newRow,king,kingCol,kingRow,0,1) ||  // up
-			   checkByRook(move.newCol,move.newRow,king,kingCol,kingRow,1,0) ||  //right
-			   checkByRook(move.newCol,move.newRow,king,kingCol,kingRow,0,-1) || //down
-			   checkByRook(move.newCol,move.newRow,king,kingCol,kingRow,-1,0) || //left
-			   
-			   checkByBishop(move.newCol,move.newRow,king,kingCol,kingRow,-1,-1) || //up left
-			   checkByBishop(move.newCol,move.newRow,king,kingCol,kingRow,1,1)   || //down right
-			   checkByBishop(move.newCol,move.newRow,king,kingCol,kingRow,1,-1)  || //up right
-			   checkByBishop(move.newCol,move.newRow,king,kingCol,kingRow,-1,1)  || // down left
-			   
-			   checkByKnight(move.newCol,move.newRow,king,kingCol,kingRow) ||
-			   checkByPawn(move.newCol,move.newRow,king,kingCol,kingRow) ||
-			   checkByKing(king,kingCol,kingRow);
+		System.out.println("Checking if king is in check at position: (" + kingCol + ", " + kingRow + ")");
+
+		boolean inCheck = checkByRook(move.newCol, move.newRow, king, kingCol, kingRow, 0, 1) // up
+			        || checkByRook(move.newCol, move.newRow, king, kingCol, kingRow, 1, 0) // right
+			        || checkByRook(move.newCol, move.newRow, king, kingCol, kingRow, 0, -1) // down
+			        || checkByRook(move.newCol, move.newRow, king, kingCol, kingRow, -1, 0) // left
+			        || checkByBishop(move.newCol, move.newRow, king, kingCol, kingRow, -1, -1) // up left
+			        || checkByBishop(move.newCol, move.newRow, king, kingCol, kingRow, 1, 1) // down right
+			        || checkByBishop(move.newCol, move.newRow, king, kingCol, kingRow, 1, -1) // up right
+			        || checkByBishop(move.newCol, move.newRow, king, kingCol, kingRow, -1, 1) // down left
+			        || checkByKnight(move.newCol, move.newRow, king, kingCol, kingRow)
+			        || checkByPawn(move.newCol, move.newRow, king, kingCol, kingRow)
+			        || checkByKing(king, kingCol, kingRow);
+
+		 System.out.println("King is in check: " + inCheck);
+		 return inCheck;   
+		
 	}
 	
 	private boolean checkByRook(int col,int row,Piece king, int kingCol,int kingRow,int colVal,int rowVal) {
@@ -121,15 +126,6 @@ public class CheckFinder {
 	}
 
 	
-	private Piece findBishop(boolean isWhite) {
-		for (Piece p : board.pieceList) {
-			if (p.type == Type.BISHOP && p.isWhite == isWhite) {
-				return p;
-			}
-		}
-		return null;
-	}
-	
 
 	public boolean isCheckmate(Piece king) {
 		
@@ -159,6 +155,10 @@ public class CheckFinder {
 	//stalemate checking
 	public boolean isStalemate(Piece king) {
 
+		if (isTimeout(king.isWhite)) {
+			return false;
+		}
+		
 		for (Piece p : board.pieceList) {
 			if (board.isSameTeam(p, king)) {
 				for (int row = 0; row < board.rows; row++) {
@@ -215,24 +215,26 @@ public class CheckFinder {
 	}
 
 	
-	public void updateFiftyMoveCounter(Movements move) {
+	public void updatehalfMoveClock(Movements move) {
 	    Piece targetPiece = board.getPiece(move.newCol, move.newRow);
 	    
 	    // Reset the counter if a pawn moves or a piece is captured
 	    if (move.piece.type == Type.PAWN || (targetPiece != null && !board.isSameTeam(move.piece, targetPiece))) {
-	        fiftyMoveCounter = 0; 
+	        halfMoveClock = 0; 
 	    } else {
-	        fiftyMoveCounter++;
+	        halfMoveClock++;
 	    }
 	}
 	
+	
+	
 	public boolean isFiftyMoveRule() {
-		return fiftyMoveCounter >= 100;
+		return halfMoveClock >= 100;
 	}
 	
-	public void recordPosition(String boardState) {
-        positionHistory.put(boardState, positionHistory.getOrDefault(boardState, 0) + 1);
-    }
+	public void recordPosition(String fen) {
+	    positionHistory.put(fen, positionHistory.getOrDefault(fen, 0) + 1);
+	}
 
     public boolean isThreefoldRepetition() {
         for (int count : positionHistory.values()) {
@@ -243,13 +245,15 @@ public class CheckFinder {
         return false;
     }
 
-    public String getBoardState(Board board) {
-        StringBuilder state = new StringBuilder();
-        for (Piece p : board.pieceList) {
-            state.append(p.type).append(p.isWhite).append(p.row).append(p.col);
+    public void removePosition(String fen) {
+        if (positionHistory.containsKey(fen)) {
+            int count = positionHistory.get(fen);
+            if (count > 1) {
+                positionHistory.put(fen, count - 1);
+            } else {
+                positionHistory.remove(fen);
+            }
         }
-        return state.toString();
     }
-
 
 }
