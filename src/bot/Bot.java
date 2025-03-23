@@ -18,24 +18,26 @@ public class Bot {
     }
 
     public List<Movements> getAllLegalMoves() {
-    	List<Movements> legalMoves = new ArrayList<>();
+        List<Movements> legalMoves = new ArrayList<>();
         for (Piece piece : board.pieceList) {
             if (piece.isWhite == isWhiteBot) {
                 for (int col = 0; col < 8; col++) {
                     for (int row = 0; row < 8; row++) {
                         if (piece.isValidMovement(col, row) && !piece.isCollide(col, row)) {
                             Movements move = new Movements(board, piece, col, row);
-                            if (!board.checkFinder.isKingInCheck(move) 
-                            		&& board.isValidMove(move)) {
-                            	legalMoves.add(move);
+                            if (!board.checkFinder.isKingInCheck(move) && board.isValidMove(move)) {
+                                legalMoves.add(move);
+                                System.out.println("Added legal move: " + piece.type + " to (" + col + ", " + row + ")");
+                            } else {
+                                System.out.println("Invalid move: " + piece.type + " to (" + col + ", " + row + ")");
                             }
                         }
                     }
                 }
             }
         }
-		return legalMoves;
-     
+        System.out.println("Total legal moves: " + legalMoves.size());
+        return legalMoves;
     }
 
     public Movements getMove() {
