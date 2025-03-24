@@ -20,7 +20,7 @@ public class ChessTimer {
         this.isWhite = isWhite;
         this.timeLeft = minutes * 60;
 
-        timer = new Timer(1000, e -> {
+        timer = new Timer(1000, _ -> {
             if (timeLeft > 0) {
                 timeLeft--;
                 updateDisplay();

@@ -14,7 +14,12 @@ import main.Main;
 import utils.StyledButton;
 
 public class GameMenuPanel extends JPanel {
-    public GameMenuPanel() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public GameMenuPanel() {
         setLayout(new GridBagLayout());
         setBackground(new Color(30, 30, 30, 200));
         GridBagConstraints gbc = new GridBagConstraints();
@@ -35,7 +40,7 @@ public class GameMenuPanel extends JPanel {
         StyledButton playButton = new StyledButton("Play", new Color(140, 200, 75), new Color(120, 180, 60), Color.WHITE);
         playButton.setFont(new Font("Arial", Font.PLAIN, 18));
         playButton.setPreferredSize(new Dimension(145,40));
-        playButton.addActionListener(e -> Main.showGameMode());
+        playButton.addActionListener(_ -> Main.showGameMode());
 
         gbc.gridy = 3;
         gbc.insets = new Insets(10, 100, 10, 100);
@@ -43,7 +48,7 @@ public class GameMenuPanel extends JPanel {
 
         StyledButton optionButton = new StyledButton("Settings", new Color(60, 60, 60), new Color(80, 80, 80), Color.WHITE);
         optionButton.setFont(new Font("Arial", Font.PLAIN, 18));
-        optionButton.addActionListener(e -> System.exit(0));
+        optionButton.addActionListener(_ -> System.exit(0));
 
         gbc.gridy = 4;
         add(optionButton, gbc);
@@ -51,7 +56,7 @@ public class GameMenuPanel extends JPanel {
         StyledButton exitButton = new StyledButton("Exit", new Color(60, 60, 60), new Color(80, 80, 80), Color.WHITE);
         exitButton.setFont(new Font("Arial", Font.PLAIN, 18));
         exitButton.setPreferredSize(new Dimension(145,40));
-        exitButton.addActionListener(e -> System.exit(0));
+        exitButton.addActionListener(_ -> System.exit(0));
 
         gbc.gridy = 5;
         add(exitButton, gbc);

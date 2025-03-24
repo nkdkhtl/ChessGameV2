@@ -36,7 +36,7 @@ public class HardBot extends Bot {
             return new MoveEvaluation(null, evaluateBoard());
         }
 
-        List<Movements> legalMoves = getAllLegalMoves();
+        List<Movements> legalMoves = getAllLegalMoves(board.deepCopy());
         Movements bestMove = null;
         int bestEvaluation = maximizing ? Integer.MIN_VALUE : Integer.MAX_VALUE;
 

@@ -13,16 +13,20 @@ import javax.swing.JButton;
 
 public class StyledButton extends JButton {
 
-    private Color baseColor;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Color baseColor;
     private Color hoverColor;
-    private Color textColor;
+//    private Color textColor;
     private int borderRadius = 10;
     
     public StyledButton(String text, Color baseColor, Color hoverColor, Color textColor) {
         super(text);
         this.baseColor = baseColor;
         this.hoverColor = hoverColor;
-        this.textColor = textColor;	
+//        this.textColor = textColor;	
         
 
         setFont(new Font("Arial", Font.BOLD, 20));

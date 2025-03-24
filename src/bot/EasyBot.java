@@ -12,7 +12,7 @@ public class EasyBot extends Bot {
     }
 
     public Movements getRandomMove() {
-        List<Movements> legalMoves = getAllLegalMoves();
+        List<Movements> legalMoves = getAllLegalMoves(board.deepCopy());
 
         // Debugging: Print all available moves
         System.out.println("Total legal moves found: " + legalMoves.size());

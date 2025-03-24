@@ -64,7 +64,6 @@ public class Main {
    	    frame.setLayout(null);
 
    	    int boardSize = 640;  // Adjust according to your chessboard
-   	    int margin = 20;      // Space between board and timer
 
    	    // Background Panel (Lowest Layer)
         backgroundPanel.setBounds(0, 0, frame.getWidth(), frame.getHeight());

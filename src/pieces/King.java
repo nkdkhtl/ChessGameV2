@@ -23,8 +23,20 @@ public class King extends Piece {
 			image = getImage("/pieces/bk");
 		}
 	}
+	@Override
 	public boolean isValidMovement(int col,int row) {
-		return Math.abs((col - this.col) * (row - this.row)) == 1 || Math.abs(col - this.col) + Math.abs(row - this.row) == 1 || canCastling(col,row);
+        // Calculate absolute differences
+        int colDiff = Math.abs(col - this.col);
+        int rowDiff = Math.abs(row - this.row);
+        
+        // King can move one square in any direction (horizontal, vertical, or diagonal)
+        // For regular moves: both differences should be at most 1
+        boolean isRegularMove = colDiff <= 1 && rowDiff <= 1 && (colDiff != 0 || rowDiff != 0);
+        
+        return isRegularMove || canCastling(col, row);	}
+	@Override
+	public boolean isCollide(int col, int row) {
+		return false;
 	}
 	
 	private boolean canCastling(int col,int row) {
@@ -52,6 +64,7 @@ public class King extends Piece {
 		
 		return false;
 	}
+	
 	
 	
 }

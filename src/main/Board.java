@@ -30,6 +30,10 @@ import utils.ChessTimer;
 import utils.StyledButton;
 
 public class Board extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static final int SQUARE_SIZE = 80;
 	public static final int BOARD_RADIUS = 40;
 	int cols = 8;
@@ -56,8 +60,6 @@ public class Board extends JPanel {
 	
 	private Bot bot;
     private boolean isBotPlaying = false;
-    private boolean isHardMode = false;
-    private boolean botMakingMove = false;
 	private boolean isPromoting = false;
 	public boolean isGameOver = false;
 	
@@ -120,11 +122,32 @@ public class Board extends JPanel {
         gameOverPanel.setVisible(false); 
         this.add(gameOverPanel);
         this.setComponentZOrder(gameOverPanel, 0);
-        
-        
-        
+  
 	}
 	
+    public Board deepCopy() {
+        Board copy = new Board();
+        copy.isGameOver = this.isGameOver;
+        copy.isPromoting = this.isPromoting;
+        copy.isWhiteToMove = this.isWhiteToMove;
+        copy.fullMoveNumber = this.fullMoveNumber;
+        copy.enPassantSquare = this.enPassantSquare;
+        copy.whiteKingSideCastle = this.whiteKingSideCastle;
+        copy.whiteQueenSideCastle = this.whiteQueenSideCastle;
+        copy.blackKingSideCastle = this.blackKingSideCastle;
+        copy.blackQueenSideCastle = this.blackQueenSideCastle;
+
+        copy.pieceList = new ArrayList<>();
+        for (Piece piece : this.pieceList) {
+            copy.pieceList.add(piece.deepCopy(copy));
+        }
+
+        copy.checkFinder = this.checkFinder.deepCopy(copy);
+
+        return copy;
+    }
+    
+
 	
 	public void enableBot(boolean isBotPlaying, boolean isHardMode, boolean isWhiteBot) {
 	    this.isBotPlaying = true;
@@ -258,7 +281,8 @@ public class Board extends JPanel {
 	        updateGame();
 	        selectedPiece = null;
 	        validMoves.clear();
-	        repaint();
+//	        repaint();
+	        
 	    }
 	}
 	
@@ -404,11 +428,26 @@ public class Board extends JPanel {
 	}
 	
 	public boolean isValidMove(Movements move) {
-		
-		if (isGameOver || move.piece.isWhite != isWhiteToMove) return false;
-        if (hasPiece(move.newCol, move.newRow) && isSameTeam(move.piece, getPiece(move.newCol, move.newRow))) return false;
-        if (!move.piece.isValidMovement(move.newCol, move.newRow) || move.piece.isCollide(move.newCol, move.newRow)) return false;
-        return !checkFinder.isKingInCheck(move);
+	    // Check 1: Game state and turn
+	    if (isGameOver || move.piece.isWhite != isWhiteToMove) {
+	        return false;
+	    }
+	    
+	    // Check 2: Same team capture check
+	    if (hasPiece(move.newCol, move.newRow) && isSameTeam(move.piece, getPiece(move.newCol, move.newRow))) {
+	        return false;
+	    }
+	    
+	    // Check 3: Valid movement pattern and collision check
+	    if (!move.piece.isValidMovement(move.newCol, move.newRow)) {
+	        return false;
+	    }
+	    if (move.piece.isCollide(move.newCol, move.newRow)) {
+	        return false;
+	    }
+	    
+	    // Check 4: King in check after move
+	    return !checkFinder.isKingInCheck(move);
 	}
 	
 	public int getSquareNum(int col,int row) {

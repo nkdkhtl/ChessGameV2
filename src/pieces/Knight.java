@@ -22,9 +22,14 @@ public class Knight extends Piece {
 			image = getImage("/pieces/bn");
 		}
 	}
-	
+	@Override
 	public boolean isValidMovement(int col,int row) {
 		return Math.abs(col - this.col) * Math.abs(row - this.row) == 2;
+	}
+
+	@Override
+	public boolean isCollide(int col, int row) {
+		return false;
 	}
 	
 }

@@ -14,6 +14,11 @@ import main.Main;
 import utils.StyledButton;
 
 public class GameModePanel extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public GameModePanel() {
 		setLayout(new GridBagLayout());
 		setBackground(new Color(30,30,30,200));
@@ -31,7 +36,7 @@ public class GameModePanel extends JPanel {
         StyledButton playerButton = new StyledButton("Play with Player", new Color(140, 200, 75), new Color(120, 180, 60), Color.WHITE);
         playerButton.setFont(new Font("Arial", Font.PLAIN, 18));
         playerButton.setPreferredSize(new Dimension(200, 40));
-        playerButton.addActionListener(e -> Main.startGame(false, false)); 
+        playerButton.addActionListener(_ -> Main.startGame(false, false)); 
 
         gbc.gridy = 1;
         gbc.insets = new Insets(10, 100, 10, 100);
@@ -41,7 +46,7 @@ public class GameModePanel extends JPanel {
         StyledButton easyBotButton = new StyledButton("Play with EasyBot", new Color(100, 180, 220), new Color(80, 150, 200), Color.WHITE);
         easyBotButton.setFont(new Font("Arial", Font.PLAIN, 18));
         easyBotButton.setPreferredSize(new Dimension(200, 40));
-        easyBotButton.addActionListener(e -> Main.startGame(true, false));
+        easyBotButton.addActionListener(_ -> Main.startGame(true, false));
 
         gbc.gridy = 2;
         add(easyBotButton, gbc);
@@ -50,7 +55,7 @@ public class GameModePanel extends JPanel {
         StyledButton hardBotButton = new StyledButton("Play with HardBot", new Color(220, 100, 100), new Color(200, 80, 80), Color.WHITE);
         hardBotButton.setFont(new Font("Arial", Font.PLAIN, 18));
         hardBotButton.setPreferredSize(new Dimension(200, 40));
-        hardBotButton.addActionListener(e -> Main.startGame(true, true));
+        hardBotButton.addActionListener(_ -> Main.startGame(true, true));
 
         gbc.gridy = 3;
         add(hardBotButton, gbc);

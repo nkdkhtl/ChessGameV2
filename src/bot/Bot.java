@@ -6,8 +6,8 @@ import main.Board;
 import main.Movements;
 import pieces.Piece;
 
-public class Bot {
-    Board board;
+public abstract class Bot {
+    protected final Board board;
     public boolean isWhiteBot;
     public boolean isHardMode;
 
@@ -17,15 +17,15 @@ public class Bot {
         this.isWhiteBot = isWhiteBot;
     }
 
-    public List<Movements> getAllLegalMoves() {
+    public List<Movements> getAllLegalMoves(Board virtualBoard) {
         List<Movements> legalMoves = new ArrayList<>();
         for (Piece piece : board.pieceList) {
             if (piece.isWhite == isWhiteBot) {
                 for (int col = 0; col < 8; col++) {
                     for (int row = 0; row < 8; row++) {
                         if (piece.isValidMovement(col, row) && !piece.isCollide(col, row)) {
-                            Movements move = new Movements(board, piece, col, row);
-                            if (!board.checkFinder.isKingInCheck(move) && board.isValidMove(move)) {
+                            Movements move = new Movements(virtualBoard, piece, col, row);
+                            if (!virtualBoard.checkFinder.isKingInCheck(move) && virtualBoard.isValidMove(move)) {
                                 legalMoves.add(move);
                                 System.out.println("Added legal move: " + piece.type + " to (" + col + ", " + row + ")");
                             } else {
@@ -40,7 +40,5 @@ public class Bot {
         return legalMoves;
     }
 
-    public Movements getMove() {
-        return null;
-    }
+    public abstract Movements getMove();
 }

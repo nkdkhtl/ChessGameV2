@@ -6,7 +6,11 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 
 public class PromotionPanel extends JDialog {
-    private String selectedPiece = "Queen"; // Default choice
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private String selectedPiece = "Queen"; // Default choice
 
     public PromotionPanel(JFrame parent, boolean isWhite) {
         super(parent, "Promote Pawn", true);
@@ -15,7 +19,7 @@ public class PromotionPanel extends JDialog {
         String[] pieces = {"Queen", "Rook", "Bishop", "Knight"};
         for (String piece : pieces) {
             JButton button = new JButton(piece);
-            button.addActionListener(e -> {
+            button.addActionListener(_ -> {
                 selectedPiece = piece;
                 dispose(); // Close dialog after selection
             });

@@ -8,7 +8,7 @@ import javax.imageio.ImageIO;
 import main.Board;
 import main.Type;
 
-public class Piece implements Cloneable {
+public abstract class Piece {
 	public Type type;
 	
 	public int  col,row;
@@ -35,12 +35,23 @@ public class Piece implements Cloneable {
 		this.board = board;
 	}
 	
-	public boolean isValidMovement(int col,int row) {
-		return true;
-	}
-	public boolean isCollide(int col,int row) {
-		return false;
-	}
+    public Piece deepCopy(Board board) {
+        Piece copy = null;
+        try {
+            copy = this.getClass().getConstructor(Board.class, boolean.class, int.class, int.class).newInstance(board, this.isWhite, this.col, this.row);
+            copy.type = this.type;
+            copy.xPos = this.xPos;
+            copy.yPos = this.yPos;
+            copy.value = this.value;
+            copy.isFirstMove = this.isFirstMove;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return copy;
+    }
+	
+	public abstract boolean isValidMovement(int col,int row);
+	public abstract boolean isCollide(int col,int row);
 	
 	public boolean getSquareColor() {
 		//true == light

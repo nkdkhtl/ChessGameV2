@@ -12,7 +12,11 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 public class TimerPanel extends JPanel {
-    private JLabel whiteTimerLabel;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JLabel whiteTimerLabel;
     private JLabel blackTimerLabel;
 
     public TimerPanel() {
@@ -32,7 +36,7 @@ public class TimerPanel extends JPanel {
         add(whiteTimerLabel);
 
         // Auto-refresh every second
-        Timer refreshTimer = new Timer(1000, e -> refreshUI());
+        Timer refreshTimer = new Timer(1000, _ -> refreshUI());
         refreshTimer.start();
     }
     

@@ -22,7 +22,7 @@ public class Pawn extends Piece {
 			image = getImage("/pieces/bp");
 		}
 	}
-	
+	@Override
 	public boolean isValidMovement(int col,int row) {
 		int colorIdx = isWhite? 1:-1;
 		
@@ -66,5 +66,26 @@ public class Pawn extends Piece {
 		
 		return false; 
 	}
-	
+
+	@Override
+	public boolean isCollide(int col, int row) {
+        int colorIdx = isWhite ? 1 : -1;
+
+        // Check collision only for forward moves
+        if (this.col == col) {
+            // Single square forward
+            if (Math.abs(this.row - row) == 1) {
+                return board.getPiece(col, row) != null;
+            }
+            
+            // Two squares forward (first move)
+            if (Math.abs(this.row - row) == 2) {
+                // Check both the destination square and the square being jumped over
+                int intermediateRow = this.row - colorIdx;
+                return board.getPiece(col, intermediateRow) != null || board.getPiece(col, row) != null;
+            }
+        }
+        
+        return false;
+    }
 }

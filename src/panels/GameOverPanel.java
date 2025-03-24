@@ -19,13 +19,15 @@ import main.Main;
 import utils.StyledButton;
 
 public class GameOverPanel extends JPanel {
-	private Board board;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	JPanel rematchPanel = new JPanel();
 	JPanel buttonPanel = new JPanel();
 	JLabel winnerLabel = new JLabel();
 	JLabel reasonLabel = new JLabel();
     public GameOverPanel(Board board, String winner) {
-        this.board = board;
         setLayout(new GridBagLayout());
         buttonPanel.setLayout(new GridLayout(3, 1, 10, 10));
         setOpaque(false);
@@ -44,9 +46,9 @@ public class GameOverPanel extends JPanel {
         StyledButton exitButton = new StyledButton("Exit", new Color(60, 60, 60), new Color(80, 80, 80), Color.WHITE);
 
         // Button actions
-        rematchButton.addActionListener(e -> board.resetBoard());
-        homeButton.addActionListener(e -> Main.showMenu());
-        exitButton.addActionListener(e -> System.exit(0));
+        rematchButton.addActionListener(_ -> board.resetBoard());
+        homeButton.addActionListener(_ -> Main.showMenu());
+        exitButton.addActionListener(_ -> System.exit(0));
 
         buttonPanel.add(rematchButton);
         buttonPanel.add(homeButton);
