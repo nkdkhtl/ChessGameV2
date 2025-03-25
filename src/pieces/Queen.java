@@ -22,11 +22,12 @@ public class Queen extends Piece {
 			image = getImage("/pieces/bq");
 		}
 	}
-	
+	@Override
 	public boolean isValidMovement(int col,int row) {
 		return Math.abs(this.col - col) == Math.abs(this.row - row) || this.col == col || this.row == row;
 	}
 	
+	@Override
 	public boolean isCollide(int col,int row) {
 		//if move like bishop
 		if (Math.abs(this.col - col) == Math.abs(this.row - row)) {

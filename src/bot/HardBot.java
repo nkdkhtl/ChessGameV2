@@ -7,6 +7,7 @@ import main.Movements;
 import pieces.Piece;
 
 public class HardBot extends Bot {
+
     public HardBot(Board board, boolean isHardMode, boolean isWhiteBot) {
         super(board, isHardMode, isWhiteBot);
     }
@@ -14,11 +15,20 @@ public class HardBot extends Bot {
     @Override
     public Movements getMove() {
         int depth = (board.pieceList.size() > 10) ? 3 : 4;
-        return getBestMove(depth);
+        System.out.println("HardBot is thinking with depth: " + depth);
+        Movements bestMove = getBestMove(depth);
+        
+        if (bestMove == null) {
+            System.out.println("No valid move found!");
+        } else {
+            System.out.println("HardBot chose move: " + bestMove.piece.type + " to (" + bestMove.newCol + "," + bestMove.newRow + ")");
+        }
+        
+        return bestMove;
     }
 
     private Movements getBestMove(int depth) {
-        return minimax(depth, true).move;
+        return minimax(board.deepCopy(), depth, true, Integer.MIN_VALUE, Integer.MAX_VALUE).move;
     }
 
     private static class MoveEvaluation {
@@ -31,31 +41,44 @@ public class HardBot extends Bot {
         }
     }
 
-    private MoveEvaluation minimax(int depth, boolean maximizing) {
-        if (depth == 0 || board.isGameOver) {
-            return new MoveEvaluation(null, evaluateBoard());
+    private MoveEvaluation minimax(Board virtualBoard, int depth, boolean maximizing, int alpha, int beta) {
+        if (depth == 0 || virtualBoard.isGameOver) {
+            return new MoveEvaluation(null, evaluateBoard(virtualBoard));
         }
 
-        List<Movements> legalMoves = getAllLegalMoves(board.deepCopy());
+        List<Movements> legalMoves = getAllLegalMoves(virtualBoard);
         Movements bestMove = null;
         int bestEvaluation = maximizing ? Integer.MIN_VALUE : Integer.MAX_VALUE;
 
         for (Movements move : legalMoves) {
-            board.makeMove(move);
-            int evaluation = minimax(depth - 1, !maximizing).evaluation;
-            board.undoMove();
+            virtualBoard.makeMove(move);
+            int evaluation = minimax(virtualBoard.deepCopy(), depth - 1, !maximizing, alpha, beta).evaluation;
+            virtualBoard.undoMove();
 
-            if ((maximizing && evaluation > bestEvaluation) || (!maximizing && evaluation < bestEvaluation)) {
-                bestEvaluation = evaluation;
-                bestMove = move;
+            if (maximizing) {
+                if (evaluation > bestEvaluation) {
+                    bestEvaluation = evaluation;
+                    bestMove = move;
+                }
+                alpha = Math.max(alpha, bestEvaluation);
+            } else {
+                if (evaluation < bestEvaluation) {
+                    bestEvaluation = evaluation;
+                    bestMove = move;
+                }
+                beta = Math.min(beta, bestEvaluation);
+            }
+
+            if (beta <= alpha) {
+                break; // Alpha-beta pruning
             }
         }
         return new MoveEvaluation(bestMove, bestEvaluation);
     }
 
-    private int evaluateBoard() {
+    private int evaluateBoard(Board virtualBoard) {
         int evaluation = 0;
-        for (Piece piece : board.pieceList) {
+        for (Piece piece : virtualBoard.pieceList) {
             evaluation += getPieceValue(piece);
         }
         return evaluation;
@@ -63,12 +86,12 @@ public class HardBot extends Bot {
 
     private int getPieceValue(Piece piece) {
         switch (piece.type) {
-            case PAWN: return piece.isWhite ? 1 : -1;
-            case KNIGHT: return piece.isWhite ? 3 : -3;
-            case BISHOP: return piece.isWhite ? 3 : -3;
-            case ROOK: return piece.isWhite ? 5 : -5;
-            case QUEEN: return piece.isWhite ? 9 : -9;
-            case KING: return piece.isWhite ? 100 : -100;
+            case PAWN: return piece.isWhite ? 100 : -100;
+            case KNIGHT: return piece.isWhite ? 300 : -300;
+            case BISHOP: return piece.isWhite ? 320 : -320;
+            case ROOK: return piece.isWhite ? 500 : -500;
+            case QUEEN: return piece.isWhite ? 900 : -900;
+            case KING: return piece.isWhite ? 10000 : -10000;
             default: return 0;
         }
     }

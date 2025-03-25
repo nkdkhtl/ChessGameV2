@@ -36,8 +36,8 @@ public class Board extends JPanel {
 	private static final long serialVersionUID = 1L;
 	public static final int SQUARE_SIZE = 80;
 	public static final int BOARD_RADIUS = 40;
-	int cols = 8;
-	int rows = 8;
+	public int cols = 8;
+	public int rows = 8;
 	public String initFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 	public ArrayList<Piece> pieceList = new ArrayList<>();
 		
@@ -45,7 +45,7 @@ public class Board extends JPanel {
 	
 	private Stack<String> moveHistory = new Stack<>();
 	
-	ArrayList<Point> validMoves = new ArrayList<>();
+	public ArrayList<Point> validMoves = new ArrayList<>();
 	
 	public MouseInput input = new MouseInput(this);
 	
@@ -92,8 +92,8 @@ public class Board extends JPanel {
 	    timerPanel.setBounds(720, 50, 160, 100);
 	    this.add(timerPanel);
 	    
-	    whiteTimer = new ChessTimer(this,timerPanel, true, 1);
-	    blackTimer = new ChessTimer(this,timerPanel, false, 1);
+	    whiteTimer = new ChessTimer(this,timerPanel, true, 10);
+	    blackTimer = new ChessTimer(this,timerPanel, false, 10);
 		
 	    addPieces(initFEN);
 	    
@@ -179,10 +179,24 @@ public class Board extends JPanel {
             @Override
             public void run() {
             	if (!isPromoting) {
-            		Movements move = bot.getMove();
-                    if (move != null) {
-                        makeMove(move);
+            		
+            		Movements virtualMove = bot.getMove(); // Get bot move (from virtual board)
+            		Piece actualPiece = null;
+            		if (virtualMove == null) return;
+                    for (Piece p : pieceList) { // Loop through actual board pieces
+                        if (p.type == virtualMove.piece.type && p.isWhite == virtualMove.piece.isWhite && p.col == virtualMove.piece.col && p.row == virtualMove.piece.row) {
+                        	 actualPiece =  p; // Found matching piece
+                        }
                     }
+                    // Find the actual piece in the real board
+                    
+                    if (actualPiece == null) return; // Safety check
+
+                    // Create an actual move using the correct piece
+                    Movements actualMove = new Movements(Board.this, actualPiece, virtualMove.newCol, virtualMove.newRow);
+
+                    // Execute move
+                    makeMove(actualMove);
             	}
             }
         }, 500); // Add delay for realism
@@ -228,7 +242,6 @@ public class Board extends JPanel {
 
         moveHistory.add(Movements.generateFEN(this));
         checkFinder.recordPosition(Movements.generateFEN(this));
-        
         
         updateGame();
         
@@ -332,6 +345,7 @@ public class Board extends JPanel {
 	        blackKingSideCastle = false;
 	        blackQueenSideCastle = false;
 	    }
+	    
 	}
 	
 	public void movePawn(Movements move) {

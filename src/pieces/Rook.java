@@ -22,11 +22,12 @@ public class Rook extends Piece {
 			image = getImage("/pieces/br");
 		}
 	}
-	
+	@Override
 	public boolean isValidMovement(int col,int row) {
 		return this.col == col || this.row == row;
 	}
 	
+	@Override
 	public boolean isCollide(int col,int row) {
 		//left 
 		if (this.col > col) {

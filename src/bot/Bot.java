@@ -19,26 +19,21 @@ public abstract class Bot {
 
     public List<Movements> getAllLegalMoves(Board virtualBoard) {
         List<Movements> legalMoves = new ArrayList<>();
-        for (Piece piece : board.pieceList) {
+        for (Piece piece : virtualBoard.pieceList) {
             if (piece.isWhite == isWhiteBot) {
-                for (int col = 0; col < 8; col++) {
-                    for (int row = 0; row < 8; row++) {
-                        if (piece.isValidMovement(col, row) && !piece.isCollide(col, row)) {
-                            Movements move = new Movements(virtualBoard, piece, col, row);
-                            if (!virtualBoard.checkFinder.isKingInCheck(move) && virtualBoard.isValidMove(move)) {
-                                legalMoves.add(move);
-                                System.out.println("Added legal move: " + piece.type + " to (" + col + ", " + row + ")");
-                            } else {
-                                System.out.println("Invalid move: " + piece.type + " to (" + col + ", " + row + ")");
-                            }
+                for (int row = 0; row < virtualBoard.rows; row++) {
+                    for (int col = 0; col < virtualBoard.cols; col++) {
+                    	virtualBoard.selectedPiece = piece;
+                        Movements move = new Movements(virtualBoard, piece, col, row);
+                        if (virtualBoard.isValidMove(move)) {
+                             legalMoves.add(move);
                         }
                     }
                 }
-            }
+           }
         }
-        System.out.println("Total legal moves: " + legalMoves.size());
         return legalMoves;
     }
-
+        
     public abstract Movements getMove();
 }

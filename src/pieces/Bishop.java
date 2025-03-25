@@ -22,13 +22,13 @@ public class Bishop extends Piece {
 			image = getImage("/pieces/bb");
 		}
 	}
-	
+	@Override
 	public boolean isValidMovement(int col,int row) {
 		return Math.abs(this.col - col) == Math.abs(this.row - row);
 	}
 	
 	
-	
+	@Override
 	public boolean isCollide(int col,int row) {
 		//up left
 		if (this.col > col && this.row > row) {
