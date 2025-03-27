@@ -48,7 +48,7 @@ public class GameMenuPanel extends JPanel {
 
         StyledButton optionButton = new StyledButton("Settings", new Color(60, 60, 60), new Color(80, 80, 80), Color.WHITE);
         optionButton.setFont(new Font("Arial", Font.PLAIN, 18));
-        optionButton.addActionListener(_ -> System.exit(0));
+        optionButton.addActionListener(_ -> Main.showSettings());
 
         gbc.gridy = 4;
         add(optionButton, gbc);

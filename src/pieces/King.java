@@ -16,12 +16,7 @@ public class King extends Piece {
 		this.yPos = row*Board.SQUARE_SIZE;
 
 		this.isWhite = isWhite;
-		
-		if (isWhite) {
-			image = getImage("/pieces/wk");
-		} else {
-			image = getImage("/pieces/bk");
-		}
+
 	}
 	@Override
 	public boolean isValidMovement(int col,int row) {

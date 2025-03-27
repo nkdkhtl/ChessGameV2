@@ -16,11 +16,7 @@ public class Pawn extends Piece {
 
 		this.isWhite = isWhite;
 		
-		if (isWhite) {
-			image = getImage("/pieces/wp");
-		} else {
-			image = getImage("/pieces/bp");
-		}
+
 	}
 	@Override
 	public boolean isValidMovement(int col,int row) {

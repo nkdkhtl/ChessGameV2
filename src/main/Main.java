@@ -10,6 +10,7 @@ import javax.swing.JLayeredPane;
 
 import panels.GameMenuPanel;
 import panels.GameModePanel;
+import panels.SettingsPanel;
 import utils.BackgroundPanel;
 
 public class Main {
@@ -43,6 +44,18 @@ public class Main {
         frame.setContentPane(backgroundPanel); 
         
         frame.add(menuPanel);
+        frame.revalidate();
+        frame.repaint();
+    }
+     
+    public static void showSettings() {
+        SettingsPanel settingsPanel = new SettingsPanel();
+        frame.getContentPane().removeAll(); // Clear previous components
+
+        backgroundPanel = new BackgroundPanel("/background/pixel_background.jpg");
+        frame.setContentPane(backgroundPanel); 
+
+        frame.add(settingsPanel);
         frame.revalidate();
         frame.repaint();
     }

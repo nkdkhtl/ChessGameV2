@@ -16,11 +16,6 @@ public class Bishop extends Piece {
 
 		this.isWhite = isWhite;
 		
-		if (isWhite) {
-			image = getImage("/pieces/wb");
-		} else {
-			image = getImage("/pieces/bb");
-		}
 	}
 	@Override
 	public boolean isValidMovement(int col,int row) {

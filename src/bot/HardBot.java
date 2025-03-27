@@ -17,20 +17,13 @@ public class HardBot extends Bot {
         int depth = (board.pieceList.size() > 10) ? 3 : 4;
         System.out.println("HardBot is thinking with depth: " + depth);
         Movements bestMove = getBestMove(depth);
-        
-        if (bestMove == null) {
-            System.out.println("No valid move found!");
-        } else {
-            System.out.println("HardBot chose move: " + bestMove.piece.type + " to (" + bestMove.newCol + "," + bestMove.newRow + ")");
-        }
-        
         return bestMove;
     }
-
+    
     private Movements getBestMove(int depth) {
         return minimax(board.deepCopy(), depth, true, Integer.MIN_VALUE, Integer.MAX_VALUE).move;
     }
-
+    
     private static class MoveEvaluation {
         public final Movements move;
         public final int evaluation;
@@ -40,7 +33,7 @@ public class HardBot extends Bot {
             this.evaluation = evaluation;
         }
     }
-
+    
     private MoveEvaluation minimax(Board virtualBoard, int depth, boolean maximizing, int alpha, int beta) {
         if (depth == 0 || virtualBoard.isGameOver) {
             return new MoveEvaluation(null, evaluateBoard(virtualBoard));
@@ -75,7 +68,7 @@ public class HardBot extends Bot {
         }
         return new MoveEvaluation(bestMove, bestEvaluation);
     }
-
+    
     private int evaluateBoard(Board virtualBoard) {
         int evaluation = 0;
         for (Piece piece : virtualBoard.pieceList) {

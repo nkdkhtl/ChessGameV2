@@ -16,11 +16,6 @@ public class Rook extends Piece {
 
 		this.isWhite = isWhite;
 		
-		if (isWhite) {
-			image = getImage("/pieces/wr");
-		} else {
-			image = getImage("/pieces/br");
-		}
 	}
 	@Override
 	public boolean isValidMovement(int col,int row) {

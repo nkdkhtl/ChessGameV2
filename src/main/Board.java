@@ -181,11 +181,15 @@ public class Board extends JPanel {
             	if (!isPromoting) {
             		
             		Movements virtualMove = bot.getMove(); // Get bot move (from virtual board)
+            		System.out.printf("MOVE: %s (%d, %d) -> (%d, %d) \n",virtualMove.piece.type,virtualMove.oldCol,virtualMove.oldRow,virtualMove.newCol,virtualMove.newRow);
             		Piece actualPiece = null;
-            		if (virtualMove == null) return;
-                    for (Piece p : pieceList) { // Loop through actual board pieces
-                        if (p.type == virtualMove.piece.type && p.isWhite == virtualMove.piece.isWhite && p.col == virtualMove.piece.col && p.row == virtualMove.piece.row) {
-                        	 actualPiece =  p; // Found matching piece
+            		for (Piece p : pieceList) { // Loop through actual board pieces
+                        if (p.isWhite == bot.isWhiteBot) {
+                        	if (p.type == virtualMove.piece.type 
+                        			&& p.col == virtualMove.oldCol 
+                        			&& p.row == virtualMove.oldRow) {
+                        		actualPiece =  p; // Found matching piece
+                        	}
                         }
                     }
                     // Find the actual piece in the real board
@@ -257,47 +261,29 @@ public class Board extends JPanel {
 	
 	public void undoMove() {
 	    if (!moveHistory.isEmpty()) {
+	        // Remove the last FEN from the history
 	        String lastFEN = moveHistory.pop();
 	        checkFinder.removePosition(lastFEN);
 
-	        // Restore the previous board state
+	        // Restore the previous board state using the previous FEN
 	        String previousFEN = moveHistory.isEmpty() ? initFEN : moveHistory.peek();
 	        addPieces(previousFEN);
 
-	        if (lastMove != null) {
-	            // Restore captured piece (if any)
-	            if (lastMove.capture != null) {
-	                pieceList.add(lastMove.capture);
-	            }
-
-	            // Restore special moves
-	            if (lastMove.piece.type == Type.KING && Math.abs(lastMove.oldCol - lastMove.newCol) == 2) {
-	                // Undo castling
-	                if (lastMove.newCol == 6) { // King-side castle
-	                    Piece rook = getPiece(5, lastMove.piece.row);
-	                    if (rook != null) rook.col = 7;
-	                } else if (lastMove.newCol == 2) { // Queen-side castle
-	                    Piece rook = getPiece(3, lastMove.piece.row);
-	                    if (rook != null) rook.col = 0;
-	                }
-	            }
-
-	            if (lastMove.piece.type == Type.PAWN && lastMove.newCol != lastMove.oldCol && lastMove.capture == null) {
-	                // Undo en passant
-	                int rowOffset = lastMove.piece.isWhite ? -1 : 1;
-	                Piece enPassantPawn = new Pawn(this, !lastMove.piece.isWhite, lastMove.newCol, lastMove.newRow + rowOffset);
-	                pieceList.add(enPassantPawn);
-	            }
-	        }
-
+	        // Toggle the turn
 	        isWhiteToMove = !isWhiteToMove;
+
+	        // Update the game state
 	        updateGame();
 	        selectedPiece = null;
 	        validMoves.clear();
-//	        repaint();
-	        
+
+	        // Handle bot move if bot is playing
+	        if (isBotPlaying && isWhiteToMove == bot.isWhiteBot) {
+	            makeBotMove();
+	        }
 	    }
 	}
+	
 	
 
 	

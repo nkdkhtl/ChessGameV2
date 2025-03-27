@@ -15,13 +15,8 @@ public class Knight extends Piece {
 		this.yPos = row*Board.SQUARE_SIZE;
 
 		this.isWhite = isWhite;
-		
-		if (isWhite) {
-			image = getImage("/pieces/wn");
-		} else {
-			image = getImage("/pieces/bn");
-		}
 	}
+	
 	@Override
 	public boolean isValidMovement(int col,int row) {
 		return Math.abs(col - this.col) * Math.abs(row - this.row) == 2;

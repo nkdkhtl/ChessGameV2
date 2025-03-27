@@ -2,6 +2,9 @@ package pieces;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 
@@ -19,16 +22,56 @@ public abstract class Piece {
 	
 	public boolean isFirstMove = true;
 	
-	public BufferedImage image;
-	public BufferedImage getImage(String imagePath) {
-		BufferedImage image = null;
-		try {
-			image = ImageIO.read(getClass().getResourceAsStream(imagePath + ".png"));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return image;
-	}
+    protected BufferedImage image;
+    private static String theme = "default"; // Default theme
+
+    private static Map<String, BufferedImage> pieceImages = new HashMap<>();
+
+    public Piece(Board board, boolean isWhite, int col, int row) {
+    	this.board = board;
+    	this.isWhite = isWhite;
+        this.col = col;
+        this.row = row;
+        loadPieceImage();
+    }
+
+    public static void setTheme(String theme) {
+        Piece.theme = theme;
+        loadAllPieceImages();
+    }
+
+    private static void loadAllPieceImages() {
+        pieceImages.clear();
+        String[] pieceNames = {"p", "r", "n", "b", "q", "k"};
+        String[] colors = {"w", "b"};
+        
+        for (String color : colors) {
+            for (String pieceName : pieceNames) {
+                String imagePath = String.format("/themes/%s/pieces/%s%s.png", theme, color, pieceName);
+                try {
+                    BufferedImage image = ImageIO.read(Piece.class.getResource(imagePath));
+                    pieceImages.put(color + pieceName, image);
+                } catch (IOException e) {
+                    System.err.println("Could not load image: " + imagePath);
+                    pieceImages.put(color + pieceName, null);
+                }
+            }
+        }
+    }
+
+    private void loadPieceImage() {
+        String key = (isWhite ? "w" : "b");
+        this.image = pieceImages.get(key);
+    }
+
+    public BufferedImage getImage() {
+        return image;
+    }
+
+    public boolean isWhite() {
+        return isWhite;
+    }
+
 	
 	Board board;
 	public Piece(Board board) {
