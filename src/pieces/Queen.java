@@ -16,6 +16,12 @@ public class Queen extends Piece {
 
 		this.isWhite = isWhite;
 		
+		if (isWhite) {
+			image = getImage("wq");
+		} else {
+			image = getImage("bq");
+		}
+		
 	}
 	@Override
 	public boolean isValidMovement(int col,int row) {

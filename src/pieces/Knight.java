@@ -17,9 +17,9 @@ public class Knight extends Piece {
 		this.isWhite = isWhite;
 		
 		if (isWhite) {
-			getImage("/wn");
+			image = getImage("wn");
 		} else {
-			getImage("/bn");
+			image = getImage("bn");
 		}
 	}
 	

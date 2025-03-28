@@ -15,7 +15,11 @@ public class Rook extends Piece {
 		this.yPos = row*Board.SQUARE_SIZE;
 
 		this.isWhite = isWhite;
-		
+		if (isWhite) {
+			image = getImage("wr");
+		} else {
+			image = getImage("br");
+		}
 	}
 	@Override
 	public boolean isValidMovement(int col,int row) {

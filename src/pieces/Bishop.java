@@ -15,6 +15,12 @@ public class Bishop extends Piece {
 	 		this.yPos = row*Board.SQUARE_SIZE;
 	 
 	 		this.isWhite = isWhite;
+	 		
+	 		if (isWhite) {
+				image = getImage("wb");
+			} else {
+				image = getImage("bb");
+			}
 	 	}
 	@Override
 	public boolean isValidMovement(int col,int row) {

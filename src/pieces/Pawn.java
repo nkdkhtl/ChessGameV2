@@ -16,6 +16,12 @@ public class Pawn extends Piece {
 
 		this.isWhite = isWhite;
 		
+		if (isWhite) {
+			image = getImage("wp");
+		} else {
+			image = getImage("bp");
+		}
+		
 
 	}
 	@Override

@@ -92,7 +92,7 @@ public class Main {
    	    	board.enableBot(true, isHardMode, false); // Enable EasyBot or HardBot
    	    }
    	    
-   	    String selectedTheme = "pixels"; // Retrieve the selected theme from settings
+   	    String selectedTheme = "classic"; // Retrieve the selected theme from settings
    	    Piece.setTheme(selectedTheme);
    	    
    	    frame.revalidate();
