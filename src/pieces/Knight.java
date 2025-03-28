@@ -15,6 +15,12 @@ public class Knight extends Piece {
 		this.yPos = row*Board.SQUARE_SIZE;
 
 		this.isWhite = isWhite;
+		
+		if (isWhite) {
+			getImage("/wn");
+		} else {
+			getImage("/bn");
+		}
 	}
 	
 	@Override

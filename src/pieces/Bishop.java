@@ -4,19 +4,18 @@ import main.Board;
 import main.Type;
 
 public class Bishop extends Piece {
-	public Bishop(Board board,boolean isWhite, int col, int row) {
-		super(board);
-		type = Type.BISHOP;
-		
-		this.col = col;
-		this.row = row;
-		
-		this.xPos = col*Board.SQUARE_SIZE;
-		this.yPos = row*Board.SQUARE_SIZE;
-
-		this.isWhite = isWhite;
-		
-	}
+	 	public Bishop(Board board,boolean isWhite, int col, int row) {
+	 		super(board);
+	 		type = Type.BISHOP;
+	 
+	 		this.col = col;
+	 		this.row = row;
+	 
+	 		this.xPos = col*Board.SQUARE_SIZE;
+	 		this.yPos = row*Board.SQUARE_SIZE;
+	 
+	 		this.isWhite = isWhite;
+	 	}
 	@Override
 	public boolean isValidMovement(int col,int row) {
 		return Math.abs(this.col - col) == Math.abs(this.row - row);

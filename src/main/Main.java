@@ -11,6 +11,7 @@ import javax.swing.JLayeredPane;
 import panels.GameMenuPanel;
 import panels.GameModePanel;
 import panels.SettingsPanel;
+import pieces.Piece;
 import utils.BackgroundPanel;
 
 public class Main {
@@ -90,6 +91,9 @@ public class Main {
    	    if (isBotPlaying) {
    	    	board.enableBot(true, isHardMode, false); // Enable EasyBot or HardBot
    	    }
+   	    
+   	    String selectedTheme = "pixels"; // Retrieve the selected theme from settings
+   	    Piece.setTheme(selectedTheme);
    	    
    	    frame.revalidate();
         frame.repaint();

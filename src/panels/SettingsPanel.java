@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import main.Main;
+import pieces.Piece;
 import utils.StyledButton;
 
 public class SettingsPanel extends JPanel {
@@ -37,7 +38,7 @@ public class SettingsPanel extends JPanel {
         gbc.insets = new Insets(10, 100, 10, 100);
         add(themeLabel, gbc);
 
-        JComboBox<String> themeComboBox = new JComboBox<>(new String[] { "Light", "Dark" });
+        JComboBox<String> themeComboBox = new JComboBox<>(new String[] { "Default", "Pixels" });
         gbc.gridy = 2;
         add(themeComboBox, gbc);
 
@@ -83,5 +84,8 @@ public class SettingsPanel extends JPanel {
     private void saveSettings(String theme, String sound, String clock) {
         // Implement the logic to save and apply the settings
         System.out.println("Settings saved: Theme=" + theme + ", Sound=" + sound + ", Clock=" + clock);
+        
+        // Apply the selected theme to the pieces
+        Piece.setTheme(theme.toLowerCase());
     }
 }
