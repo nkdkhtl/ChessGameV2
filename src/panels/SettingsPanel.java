@@ -17,12 +17,10 @@ import utils.StyledButton;
 
 public class SettingsPanel extends JPanel {
     private static final long serialVersionUID = 1L;
-
+    GridBagConstraints gbc = new GridBagConstraints();
     public SettingsPanel() {
         setLayout(new GridBagLayout());
         setBackground(new Color(30, 30, 30, 200));
-        GridBagConstraints gbc = new GridBagConstraints();
-
         JLabel titleLabel = new JLabel("Settings");
         titleLabel.setForeground(Color.WHITE);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
@@ -38,7 +36,7 @@ public class SettingsPanel extends JPanel {
         gbc.insets = new Insets(10, 100, 10, 100);
         add(themeLabel, gbc);
 
-        JComboBox<String> themeComboBox = new JComboBox<>(new String[] { "classic", "pixels" });
+        JComboBox<String> themeComboBox = new JComboBox<>(new String[] { "classic", "pixels", "twilight", "modern", "8bit" });
         gbc.gridy = 2;
         add(themeComboBox, gbc);
 
@@ -60,7 +58,7 @@ public class SettingsPanel extends JPanel {
         gbc.gridy = 5;
         add(clockLabel, gbc);
 
-        JComboBox<String> clockComboBox = new JComboBox<>(new String[] { "5 minutes", "10 minutes", "15 minutes" });
+        JComboBox<String> clockComboBox = new JComboBox<>(new String[] { "1 minutes" ,"3 minutes", "5 minutes", "10 minutes", "15 minutes" });
         gbc.gridy = 6;
         add(clockComboBox, gbc);
 
@@ -68,7 +66,10 @@ public class SettingsPanel extends JPanel {
         StyledButton saveButton = new StyledButton("Save", new Color(140, 200, 75), new Color(120, 180, 60), Color.WHITE);
         saveButton.setFont(new Font("Arial", Font.PLAIN, 18));
         saveButton.setPreferredSize(new Dimension(145, 40));
-        saveButton.addActionListener(_ -> saveSettings((String) themeComboBox.getSelectedItem(), (String) soundComboBox.getSelectedItem(), (String) clockComboBox.getSelectedItem()));
+        saveButton.addActionListener(_ -> {
+        	saveSettings((String) themeComboBox.getSelectedItem(), (String) soundComboBox.getSelectedItem(), (String) clockComboBox.getSelectedItem());
+        	Main.showMenu();
+        });
         gbc.gridy = 7;
         add(saveButton, gbc);
 
@@ -84,6 +85,8 @@ public class SettingsPanel extends JPanel {
     private void saveSettings(String theme, String sound, String clock) {
         // Implement the logic to save and apply the settings
         Piece.setTheme(theme); // Apply the selected themes
-        System.out.println("Settings saved: Theme=" + theme + ", Sound=" + sound + ", Clock=" + clock);
+        int minutes = Integer.parseInt(clock.split(" ")[0]); // Extract minutes from the selected option
+		Main.getBoard().setDuration(minutes);
+		
     }
 }

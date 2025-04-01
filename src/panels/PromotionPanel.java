@@ -21,7 +21,7 @@ public class PromotionPanel extends JDialog {
             JButton button = new JButton(piece);
             button.addActionListener(_ -> {
                 selectedPiece = piece;
-                dispose(); // Close dialog after selection
+                dispose(); 
             });
             add(button);
         }

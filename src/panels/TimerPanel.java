@@ -18,14 +18,15 @@ public class TimerPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JLabel whiteTimerLabel;
     private JLabel blackTimerLabel;
-
-    public TimerPanel() {
+   
+    public TimerPanel(int duration) {
+    	String timer = (duration >= 10) ? String.format("%d", duration) : String.format("0%d", duration);
         setLayout(new GridLayout(2, 1));
         setBackground(new Color(50, 50, 50));
         setPreferredSize(new Dimension(160, 60));
 
-        whiteTimerLabel = new JLabel("White: 10:00", SwingConstants.CENTER);
-        blackTimerLabel = new JLabel("Black: 10:00", SwingConstants.CENTER);
+        whiteTimerLabel = new JLabel("White: " + timer + ":00", SwingConstants.CENTER);
+        blackTimerLabel = new JLabel("Black: " + timer + ":00", SwingConstants.CENTER);
         
         whiteTimerLabel.setFont(new Font("Arial", Font.BOLD, 20));
         blackTimerLabel.setFont(new Font("Arial", Font.BOLD, 20));

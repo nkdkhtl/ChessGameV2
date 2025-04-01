@@ -17,7 +17,8 @@ import utils.BackgroundPanel;
 public class Main {
     private static JFrame frame;
     private static BackgroundPanel backgroundPanel;
-    
+    private static Board board;
+
     public static void main(String[] args) {
         frame = new JFrame("Chess Game");
         frame.getContentPane().setBackground(new Color(0, 0, 0, 0));
@@ -25,78 +26,84 @@ public class Main {
         frame.setMinimumSize(new Dimension(960, 720));
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
+        frame.setResizable(false);
         setCustomIcon(frame);
 
         showMenu();
         frame.setVisible(true);
     }
-    
+
     private static void setCustomIcon(JFrame frame) {
-        ImageIcon icon = new ImageIcon(Main.class.getResource("/icon/icon.png")); // Ensure correct path
+        ImageIcon icon = new ImageIcon(Main.class.getResource("/icon/icon.png"));
+        // Ensure correct path
         frame.setIconImage(icon.getImage());
     }
 
-     public static void showMenu() {
-    	GameMenuPanel menuPanel = new GameMenuPanel();
+    public static void showMenu() {
+        GameMenuPanel menuPanel = new GameMenuPanel();
         frame.getContentPane().removeAll(); // Clear previous components
-        
+
         backgroundPanel = new BackgroundPanel("/background/pixel_background.jpg");
-        frame.setContentPane(backgroundPanel); 
-        
+        frame.setContentPane(backgroundPanel);
+
         frame.add(menuPanel);
         frame.revalidate();
         frame.repaint();
     }
-     
+
     public static void showSettings() {
         SettingsPanel settingsPanel = new SettingsPanel();
         frame.getContentPane().removeAll(); // Clear previous components
 
         backgroundPanel = new BackgroundPanel("/background/pixel_background.jpg");
-        frame.setContentPane(backgroundPanel); 
+        frame.setContentPane(backgroundPanel);
 
         frame.add(settingsPanel);
         frame.revalidate();
         frame.repaint();
     }
-     
-     public static void showGameMode() {
-    	 GameModePanel modePanel = new GameModePanel();
-         frame.getContentPane().removeAll();
-         frame.setContentPane(backgroundPanel);
-         frame.add(modePanel);
-         frame.revalidate();
-         frame.repaint();
-     }
+
+    public static void showGameMode() {
+        GameModePanel modePanel = new GameModePanel();
+        frame.getContentPane().removeAll();
+        frame.setContentPane(backgroundPanel);
+        frame.add(modePanel);
+        frame.revalidate();
+        frame.repaint();
+    }
 
     public static void startGame(boolean isBotPlaying, boolean isHardMode) {
-    	frame.getContentPane().removeAll(); // Clear menu
+        frame.getContentPane().removeAll(); // Clear menu
 
         JLayeredPane layeredPane = new JLayeredPane();
-   	    frame.setContentPane(layeredPane);
-   	    frame.setLayout(null);
+        frame.setContentPane(layeredPane);
+        frame.setLayout(null);
 
-   	    int boardSize = 640;  // Adjust according to your chessboard
+        int boardSize = 640; // Adjust according to your chessboard
 
-   	    // Background Panel (Lowest Layer)
+        // Background Panel (Lowest Layer)
         backgroundPanel.setBounds(0, 0, frame.getWidth(), frame.getHeight());
-   	    layeredPane.add(backgroundPanel, Integer.valueOf(0)); // Lower z-index
-   	    
+        layeredPane.add(backgroundPanel, Integer.valueOf(0)); // Lower z-index
+
         // Chess Board
-   	    Board board = new Board();
-   	    board.setBounds(20, 20, boardSize, boardSize); // Adjust based on your chessboard size
-   	    layeredPane.add(board, Integer.valueOf(1)); // Higher z-index
-   	    
-   	    if (isBotPlaying) {
-   	    	board.enableBot(true, isHardMode, false); // Enable EasyBot or HardBot
-   	    }
-   	    
-   	    String selectedTheme = "classic"; // Retrieve the selected theme from settings
-   	    Piece.setTheme(selectedTheme);
-   	    
-   	    frame.revalidate();
+        String selectedTheme = null;
+        board = new Board();
+        board.setBounds(20, 20, boardSize, boardSize); // Adjust based on your chessboard size
+        layeredPane.add(board, Integer.valueOf(1)); // Higher z-index
+
+        if (isBotPlaying) {
+            board.enableBot(true, isHardMode, false); // Enable EasyBot or HardBot
+        }
+
+        Piece.setTheme(selectedTheme);
+
+        frame.revalidate();
         frame.repaint();
-        
+
     }
+
+    public static Board getBoard() {
+        return board;
+    }
+
 }

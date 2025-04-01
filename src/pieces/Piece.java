@@ -16,9 +16,10 @@ public abstract class Piece {
     
     public boolean isWhite;
     public int value;
-    
+    private boolean highlight = false;
+
     public boolean isFirstMove = true;
-    public static String theme = "classic";
+    public static String theme = null;
 
     public Piece(Board board, boolean isWhite, int col, int row) {
         this.board = board;
@@ -36,6 +37,7 @@ public abstract class Piece {
     public BufferedImage image;
  	public BufferedImage getImage(String imagePath) {
  		BufferedImage image = null;
+ 		System.out.println(theme);
  		String pathFormat = String.format("/themes/%s/", theme);
  		try {
  			
@@ -78,6 +80,14 @@ public abstract class Piece {
         // true == light
         // black == dark
         return (col + row) % 2 == 0;
+    }
+    
+    public boolean isHighlight() {
+        return highlight;
+    }
+
+    public void setHighlight(boolean highlight) {
+        this.highlight = highlight;
     }
     
     public void draw(Graphics2D g2d) {
