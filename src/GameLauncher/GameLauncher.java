@@ -12,6 +12,7 @@ import panels.GameMenuPanel;
 import panels.GameModePanel;
 import panels.SettingsPanel;
 import utils.BackgroundPanel;
+import utils.SettingsManager;
 import utils.StyledButton;
 
 public class GameLauncher {
@@ -34,6 +35,8 @@ public class GameLauncher {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         setCustomIcon(frame);
+        
+        SettingsManager.loadSettings();
 
         showMenu();
         frame.setVisible(true);

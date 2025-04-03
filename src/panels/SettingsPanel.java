@@ -82,6 +82,8 @@ public class SettingsPanel extends JPanel {
         backButton.addActionListener(_ -> GameLauncher.showMenu());
         gbc.gridy = 8;
         add(backButton, gbc);
+        
+        SettingsManager.loadSettings(); 
     }
 
     private void saveSettings(String theme, String sound, String clock) {
