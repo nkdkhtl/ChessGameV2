@@ -28,7 +28,7 @@ import pieces.Piece;
 import pieces.Queen;
 import pieces.Rook;
 import utils.ChessTimer;
-import utils.StyledButton;
+import utils.SoundManager;
 
 public class Board extends JPanel {
 	/**
@@ -47,7 +47,7 @@ public class Board extends JPanel {
 
 	public Piece selectedPiece;
 
-	private Stack<String> moveHistory = new Stack<>();
+	protected Stack<String> moveHistory = new Stack<>();
 
 	public ArrayList<Point> validMoves = new ArrayList<>();
 
@@ -82,8 +82,6 @@ public class Board extends JPanel {
 	private TimerPanel timerPanel;
 	private Movements lastMove;
 
-	private StyledButton homeButton;
-	private StyledButton exitButton;
 
 	public Board() {
 		this.setOpaque(true);
@@ -102,23 +100,7 @@ public class Board extends JPanel {
 
 		addPieces(initFEN);
 
-		homeButton = new StyledButton("Return to Menu", new Color(60, 60, 60), new Color(80, 80, 80), Color.WHITE);
-		exitButton = new StyledButton("Exit", new Color(60, 60, 60), new Color(80, 80, 80), Color.WHITE);
 
-		homeButton.setBounds(720, 200, 160, 40);
-		exitButton.setBounds(720, 250, 160, 40);
-
-		homeButton.addActionListener(_ -> {
-			System.out.println("Return to Menu Clicked!");
-			GameLauncher.showMenu();
-		});
-		exitButton.addActionListener(_ -> {
-			System.out.println("Exit Clicked!");
-			System.exit(0);
-		});
-
-		this.add(homeButton);
-		this.add(exitButton);
 
 		gameOverPanel = new GameOverPanel(this, "");
 		gameOverPanel.setBounds(0, 0, cols * SQUARE_SIZE, rows * SQUARE_SIZE);
@@ -152,6 +134,9 @@ public class Board extends JPanel {
 
 	public static void setDuration(int duration) {
 		Board.duration = duration;
+	}
+	public Stack<String> getMoveHistory() {
+		return moveHistory;
 	}
 
 	public void enableBot(boolean isBotPlaying, boolean isHardMode, boolean isWhiteBot) {
@@ -224,7 +209,7 @@ public class Board extends JPanel {
 		} else if (move.piece.type == Type.KING) {
 			moveKing(move);
 		}
-
+		
 		move.piece.col = move.newCol;
 		move.piece.row = move.newRow;
 		move.piece.xPos = move.newCol * SQUARE_SIZE;
@@ -254,10 +239,9 @@ public class Board extends JPanel {
 		isWhiteToMove = !isWhiteToMove;
 
 		moveHistory.add(Movements.generateFEN(this));
-		checkFinder.recordPosition(Movements.generateFEN(this));
 
 		updateGame();
-
+		SoundManager.playSound("move-self");
 		selectedPiece = null;
 		validMoves.clear();
 		repaint();
@@ -270,9 +254,6 @@ public class Board extends JPanel {
 
 	public void undoMove() {
 		if (!moveHistory.isEmpty()) {
-			// Remove the last FEN from the history
-			String lastFEN = moveHistory.pop();
-			checkFinder.removePosition(lastFEN);
 
 			// Restore the previous board state using the previous FEN
 			String previousFEN = moveHistory.isEmpty() ? initFEN : moveHistory.peek();
@@ -344,6 +325,7 @@ public class Board extends JPanel {
 		int colorIdx = move.piece.isWhite ? 1 : -1;
 
 		if (getSquareNum(move.newCol, move.newRow) == enPassantSquare) {
+			SoundManager.playSound("move-self");
 			move.capture = getPiece(move.newCol, move.newRow + colorIdx);
 
 		}
@@ -411,7 +393,10 @@ public class Board extends JPanel {
 	}
 
 	public void capture(Piece piece) {
-		pieceList.remove(piece);
+		if (piece != null) {
+            SoundManager.playSound("capture"); // Play capture sound
+            pieceList.remove(piece);
+        }
 	}
 
 	public boolean isSameTeam(Piece p1, Piece p2) {
@@ -448,7 +433,7 @@ public class Board extends JPanel {
 		if (move.piece.isCollide(move.newCol, move.newRow)) {
 			return false;
 		}
-
+		
 		// Check 4: King in check after move
 		return !checkFinder.isKingInCheck(move);
 	}
@@ -488,7 +473,8 @@ public class Board extends JPanel {
 
 	public void updateGame() {
 		Piece king = findKing(isWhiteToMove);
-
+		
+		checkFinder.recordPosition(checkFinder.getBoardState(this));
 		if (checkFinder.isCheckmate(king)) {
 			if (checkFinder.isKingInCheck(new Movements(this, king, king.col, king.row))) {
 				String result = isWhiteToMove ? "Black" : "White";
@@ -553,7 +539,6 @@ public class Board extends JPanel {
 
 		// Enable anti-aliasing for smoother rendering
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
 		g2d.setColor(new Color(50, 50, 50));
 		g2d.fillRoundRect(0, 0, cols * SQUARE_SIZE, rows * SQUARE_SIZE, BOARD_RADIUS, BOARD_RADIUS);
 
@@ -593,4 +578,6 @@ public class Board extends JPanel {
 
 		g2d.setClip(null);
 	}
+
+
 }

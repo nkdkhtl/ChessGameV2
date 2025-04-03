@@ -7,7 +7,7 @@ import pieces.Piece;
 public class CheckFinder {
     Board board;
     public static int halfMoveClock = 0;
-    HashMap<String, Integer> positionHistory = new HashMap<>();
+    private HashMap<String, Integer> positionHistory = new HashMap<>();
     
     public CheckFinder(Board board) {
         this.board = board;
@@ -226,12 +226,11 @@ public class CheckFinder {
     }
     
     public boolean isFiftyMoveRule() {
-        return halfMoveClock >= 100;
+        return halfMoveClock >= 50;
     }
     
-    public void recordPosition(String fen) {
-        int count = positionHistory.getOrDefault(fen, 0) + 1;
-        positionHistory.put(fen, count);
+	public void recordPosition(String boardState) {
+        positionHistory.put(boardState, positionHistory.getOrDefault(boardState, 0) + 1);
     }
 
     public boolean isThreefoldRepetition() {
@@ -243,15 +242,12 @@ public class CheckFinder {
         return false;
     }
 
-    public void removePosition(String fen) {
-        if (positionHistory.containsKey(fen)) {
-            int count = positionHistory.get(fen);
-            if (count > 1) {
-                positionHistory.put(fen, count - 1);
-            } else {
-                positionHistory.remove(fen);
-            }
+    public String getBoardState(Board board) {
+        StringBuilder state = new StringBuilder();
+        for (Piece p : board.pieceList) {
+            state.append(p.type).append(p.isWhite).append(p.row).append(p.col);
         }
+        return state.toString();
     }
 
 }

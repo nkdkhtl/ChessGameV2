@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import GameLauncher.GameLauncher;
@@ -56,7 +57,13 @@ public class GameMenuPanel extends JPanel {
         StyledButton exitButton = new StyledButton("Exit", new Color(60, 60, 60), new Color(80, 80, 80), Color.WHITE);
         exitButton.setFont(new Font("Arial", Font.PLAIN, 18));
         exitButton.setPreferredSize(new Dimension(145,40));
-        exitButton.addActionListener(_ -> System.exit(0));
+        exitButton.addActionListener(_ -> {
+			int response = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit?", "Chét Gêm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        	if (response == JOptionPane.YES_OPTION) {
+                System.out.println("Exit Clicked!");
+                System.exit(0);
+            }
+        });
 
         gbc.gridy = 5;
         add(exitButton, gbc);

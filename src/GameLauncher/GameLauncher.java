@@ -6,19 +6,27 @@ import java.awt.GridBagLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 
 import panels.GameMenuPanel;
 import panels.GameModePanel;
 import panels.SettingsPanel;
 import utils.BackgroundPanel;
+import utils.StyledButton;
 
 public class GameLauncher {
     private static JFrame frame;
     private static BackgroundPanel backgroundPanel;
     private static Board board;
 
+	private static StyledButton homeButton;
+	private static StyledButton exitButton;
+	
+    private static boolean soundEffectsEnabled = true; // Default to enabled
+
+
     public static void initialize() {
-        frame = new JFrame("Chess Game");
+        frame = new JFrame("Chét Gêm v1.0");
         frame.getContentPane().setBackground(new Color(0, 0, 0, 0));
         frame.setLayout(new GridBagLayout());
         frame.setMinimumSize(new Dimension(960, 720));
@@ -87,7 +95,32 @@ public class GameLauncher {
         board = new Board();
         board.setBounds(20, 20, boardSize, boardSize); // Adjust based on your chessboard size
         layeredPane.add(board, Integer.valueOf(1)); // Higher z-index
+        
+		homeButton = new StyledButton("Return to Menu", new Color(60, 60, 60), new Color(80, 80, 80), Color.WHITE);
+		exitButton = new StyledButton("Exit", new Color(60, 60, 60), new Color(80, 80, 80), Color.WHITE);
 
+		homeButton.setBounds(720, 200, 160, 40);
+		exitButton.setBounds(720, 250, 160, 40);
+
+		homeButton.addActionListener(_ -> {
+			int response = JOptionPane.showConfirmDialog(null, "Are you sure you want to return to the menu?", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (response == JOptionPane.YES_OPTION) {
+                System.out.println("Return to Menu Clicked!");
+                GameLauncher.showMenu();
+            }
+		});
+		
+		exitButton.addActionListener(_ -> {
+			int response = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit?", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (response == JOptionPane.YES_OPTION) {
+                System.out.println("Exit Clicked!");
+                System.exit(0);
+            }
+		});
+
+		layeredPane.add(homeButton,Integer.valueOf(1));
+		layeredPane.add(exitButton,Integer.valueOf(1));
+        
         if (isBotPlaying) {
             board.enableBot(true, isHardMode, false); // Enable EasyBot or HardBot
         }

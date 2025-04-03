@@ -12,6 +12,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import GameLauncher.GameLauncher;
+import utils.SettingsManager;
+import utils.SoundManager;
 import utils.StyledButton;
 import utils.ThemeManager;
 
@@ -85,8 +87,13 @@ public class SettingsPanel extends JPanel {
     private void saveSettings(String theme, String sound, String clock) {
         // Implement the logic to save and apply the settings
     	ThemeManager.setTheme(theme); // Apply the selected themes
+    	SoundManager.setSoundSate(sound);
         int minutes = Integer.parseInt(clock.split(" ")[0]); // Extract minutes from the selected option
         GameLauncher.getBoard().setDuration(minutes);
+        
+        SettingsManager.saveSettings("theme", theme);
+        SettingsManager.saveSettings("sound", sound);
+        SettingsManager.saveSettings("clock", clock);
 		
     }
 }
