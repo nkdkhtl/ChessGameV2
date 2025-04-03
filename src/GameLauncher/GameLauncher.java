@@ -1,5 +1,4 @@
-package main;
-
+package GameLauncher;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
@@ -11,15 +10,14 @@ import javax.swing.JLayeredPane;
 import panels.GameMenuPanel;
 import panels.GameModePanel;
 import panels.SettingsPanel;
-import pieces.Piece;
 import utils.BackgroundPanel;
 
-public class Main {
+public class GameLauncher {
     private static JFrame frame;
     private static BackgroundPanel backgroundPanel;
     private static Board board;
 
-    public static void main(String[] args) {
+    public static void initialize() {
         frame = new JFrame("Chess Game");
         frame.getContentPane().setBackground(new Color(0, 0, 0, 0));
         frame.setLayout(new GridBagLayout());
@@ -34,7 +32,7 @@ public class Main {
     }
 
     private static void setCustomIcon(JFrame frame) {
-        ImageIcon icon = new ImageIcon(Main.class.getResource("/icon/icon.png"));
+        ImageIcon icon = new ImageIcon(GameLauncher.class.getResource("/icon/icon.png"));
         // Ensure correct path
         frame.setIconImage(icon.getImage());
     }
@@ -86,7 +84,6 @@ public class Main {
         layeredPane.add(backgroundPanel, Integer.valueOf(0)); // Lower z-index
 
         // Chess Board
-        String selectedTheme = null;
         board = new Board();
         board.setBounds(20, 20, boardSize, boardSize); // Adjust based on your chessboard size
         layeredPane.add(board, Integer.valueOf(1)); // Higher z-index
@@ -95,15 +92,11 @@ public class Main {
             board.enableBot(true, isHardMode, false); // Enable EasyBot or HardBot
         }
 
-        Piece.setTheme(selectedTheme);
-
         frame.revalidate();
         frame.repaint();
-
     }
 
     public static Board getBoard() {
         return board;
     }
-
 }

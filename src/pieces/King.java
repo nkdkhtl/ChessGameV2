@@ -1,8 +1,8 @@
 package pieces;
 
-import main.Board;
-import main.Movements;
-import main.Type;
+import GameLauncher.Board;
+import GameLauncher.Movements;
+import GameLauncher.Type;
 
 public class King extends Piece {
 	public King(Board board,boolean isWhite, int col, int row) {

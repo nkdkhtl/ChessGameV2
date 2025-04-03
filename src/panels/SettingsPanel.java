@@ -11,9 +11,9 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import main.Main;
-import pieces.Piece;
+import GameLauncher.GameLauncher;
 import utils.StyledButton;
+import utils.ThemeManager;
 
 public class SettingsPanel extends JPanel {
     private static final long serialVersionUID = 1L;
@@ -68,7 +68,7 @@ public class SettingsPanel extends JPanel {
         saveButton.setPreferredSize(new Dimension(145, 40));
         saveButton.addActionListener(_ -> {
         	saveSettings((String) themeComboBox.getSelectedItem(), (String) soundComboBox.getSelectedItem(), (String) clockComboBox.getSelectedItem());
-        	Main.showMenu();
+        	GameLauncher.showMenu();
         });
         gbc.gridy = 7;
         add(saveButton, gbc);
@@ -77,16 +77,16 @@ public class SettingsPanel extends JPanel {
         StyledButton backButton = new StyledButton("Back", new Color(60, 60, 60), new Color(80, 80, 80), Color.WHITE);
         backButton.setFont(new Font("Arial", Font.PLAIN, 18));
         backButton.setPreferredSize(new Dimension(145, 40));
-        backButton.addActionListener(_ -> Main.showMenu());
+        backButton.addActionListener(_ -> GameLauncher.showMenu());
         gbc.gridy = 8;
         add(backButton, gbc);
     }
 
     private void saveSettings(String theme, String sound, String clock) {
         // Implement the logic to save and apply the settings
-        Piece.setTheme(theme); // Apply the selected themes
+    	ThemeManager.setTheme(theme); // Apply the selected themes
         int minutes = Integer.parseInt(clock.split(" ")[0]); // Extract minutes from the selected option
-		Main.getBoard().setDuration(minutes);
+        GameLauncher.getBoard().setDuration(minutes);
 		
     }
 }

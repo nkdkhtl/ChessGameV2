@@ -2,8 +2,8 @@ package bot;
 
 import java.util.List;
 
-import main.Board;
-import main.Movements;
+import GameLauncher.Board;
+import GameLauncher.Movements;
 import pieces.Piece;
 
 public class HardBot extends Bot {

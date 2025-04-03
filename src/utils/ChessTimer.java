@@ -4,7 +4,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
-import main.Board;
+import GameLauncher.Board;
 import panels.TimerPanel;
 
 public class ChessTimer {

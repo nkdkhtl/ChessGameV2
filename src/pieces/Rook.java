@@ -1,7 +1,7 @@
 package pieces;
 
-import main.Board;
-import main.Type;
+import GameLauncher.Board;
+import GameLauncher.Type;
 
 public class Rook extends Piece {
 	public Rook(Board board,boolean isWhite, int col, int row) {

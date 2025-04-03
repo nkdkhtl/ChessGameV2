@@ -10,7 +10,7 @@ import java.awt.Insets;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import main.Main;
+import GameLauncher.GameLauncher;
 import utils.StyledButton;
 
 public class GameMenuPanel extends JPanel {
@@ -40,7 +40,7 @@ public class GameMenuPanel extends JPanel {
         StyledButton playButton = new StyledButton("Play", new Color(140, 200, 75), new Color(120, 180, 60), Color.WHITE);
         playButton.setFont(new Font("Arial", Font.PLAIN, 18));
         playButton.setPreferredSize(new Dimension(145,40));
-        playButton.addActionListener(_ -> Main.showGameMode());
+        playButton.addActionListener(_ -> GameLauncher.showGameMode());
 
         gbc.gridy = 3;
         gbc.insets = new Insets(10, 100, 10, 100);
@@ -48,7 +48,7 @@ public class GameMenuPanel extends JPanel {
 
         StyledButton optionButton = new StyledButton("Settings", new Color(60, 60, 60), new Color(80, 80, 80), Color.WHITE);
         optionButton.setFont(new Font("Arial", Font.PLAIN, 18));
-        optionButton.addActionListener(_ -> Main.showSettings());
+        optionButton.addActionListener(_ -> GameLauncher.showSettings());
 
         gbc.gridy = 4;
         add(optionButton, gbc);

@@ -1,4 +1,4 @@
-package main;
+package GameLauncher;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -110,7 +110,7 @@ public class Board extends JPanel {
 
 		homeButton.addActionListener(_ -> {
 			System.out.println("Return to Menu Clicked!");
-			Main.showMenu();
+			GameLauncher.showMenu();
 		});
 		exitButton.addActionListener(_ -> {
 			System.out.println("Exit Clicked!");
@@ -385,7 +385,6 @@ public class Board extends JPanel {
 			String choice = panel.getSelectedPiece();
 
 			Piece newPiece;
-			System.out.println(Piece.getTheme());
 			switch (choice) {
 				case "Rook":
 					newPiece = new Rook(this, move.piece.isWhite, move.newCol, move.newRow);

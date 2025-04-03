@@ -5,8 +5,9 @@ import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
 
-import main.Board;
-import main.Type;
+import GameLauncher.Board;
+import GameLauncher.Type;
+import utils.ThemeManager;
 
 public abstract class Piece {
     public Type type;
@@ -19,7 +20,6 @@ public abstract class Piece {
     private boolean highlight = false;
 
     public boolean isFirstMove = true;
-    public static String theme = "classic";
 
     public Piece(Board board, boolean isWhite, int col, int row) {
         this.board = board;
@@ -27,19 +27,11 @@ public abstract class Piece {
         this.col = col;
         this.row = row;
     }
-    
-
-	public static void setTheme(String selectedTheme) {
-		Piece.theme = selectedTheme;
-	}
-	public static String getTheme() {
-		return Piece.theme;
-	}
 
     public BufferedImage image;
  	public BufferedImage getImage(String imagePath) {
  		BufferedImage image = null;
- 		String pathFormat = String.format("/themes/%s/", theme);
+ 		String pathFormat = String.format("/themes/%s/", ThemeManager.getTheme());
  		try {
  			
  			image = ImageIO.read(getClass().getResourceAsStream(pathFormat + imagePath + ".png"));

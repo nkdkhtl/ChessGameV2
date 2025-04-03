@@ -14,8 +14,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import main.Board;
-import main.Main;
+import GameLauncher.Board;
+import GameLauncher.GameLauncher;
 import utils.StyledButton;
 
 public class GameOverPanel extends JPanel {
@@ -47,7 +47,7 @@ public class GameOverPanel extends JPanel {
 
         // Button actions
         rematchButton.addActionListener(_ -> board.resetBoard());
-        homeButton.addActionListener(_ -> Main.showMenu());
+        homeButton.addActionListener(_ -> GameLauncher.showMenu());
         exitButton.addActionListener(_ -> System.exit(0));
 
         buttonPanel.add(rematchButton);

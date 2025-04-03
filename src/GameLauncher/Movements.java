@@ -1,4 +1,4 @@
-package main;
+package GameLauncher;
 
 import pieces.Piece;
 

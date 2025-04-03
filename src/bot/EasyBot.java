@@ -3,8 +3,8 @@ package bot;
 import java.util.List;
 import java.util.Random;
 
-import main.Board;
-import main.Movements;
+import GameLauncher.Board;
+import GameLauncher.Movements;
 
 public class EasyBot extends Bot {
 	private static final Random random = new Random();

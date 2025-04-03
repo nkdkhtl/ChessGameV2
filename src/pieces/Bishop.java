@@ -1,7 +1,7 @@
 package pieces;
 
-import main.Board;
-import main.Type;
+import GameLauncher.Board;
+import GameLauncher.Type;
 
 public class Bishop extends Piece {
 	 	public Bishop(Board board,boolean isWhite, int col, int row) {
