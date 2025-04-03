@@ -19,7 +19,7 @@ public abstract class Piece {
     private boolean highlight = false;
 
     public boolean isFirstMove = true;
-    public static String theme = null;
+    public static String theme = "classic";
 
     public Piece(Board board, boolean isWhite, int col, int row) {
         this.board = board;
@@ -32,12 +32,13 @@ public abstract class Piece {
 	public static void setTheme(String selectedTheme) {
 		Piece.theme = selectedTheme;
 	}
-
+	public static String getTheme() {
+		return Piece.theme;
+	}
 
     public BufferedImage image;
  	public BufferedImage getImage(String imagePath) {
  		BufferedImage image = null;
- 		System.out.println(theme);
  		String pathFormat = String.format("/themes/%s/", theme);
  		try {
  			

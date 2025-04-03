@@ -385,6 +385,7 @@ public class Board extends JPanel {
 			String choice = panel.getSelectedPiece();
 
 			Piece newPiece;
+			System.out.println(Piece.getTheme());
 			switch (choice) {
 				case "Rook":
 					newPiece = new Rook(this, move.piece.isWhite, move.newCol, move.newRow);
