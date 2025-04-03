@@ -20,11 +20,11 @@ import utils.ThemeManager;
 public class SettingsPanel extends JPanel {
     private static final long serialVersionUID = 1L;
     GridBagConstraints gbc = new GridBagConstraints();
-    
-    JComboBox<String> themeComboBox;
-    JComboBox<String> soundComboBox;
-    JComboBox<String> clockComboBox;
+
     public SettingsPanel() {
+    	
+    	SettingsManager.loadSettings();
+    	
         setLayout(new GridBagLayout());
         setBackground(new Color(30, 30, 30, 200));
         JLabel titleLabel = new JLabel("Settings");
@@ -42,7 +42,11 @@ public class SettingsPanel extends JPanel {
         gbc.insets = new Insets(10, 100, 10, 100);
         add(themeLabel, gbc);
 
-        themeComboBox = new JComboBox<>(new String[] { "classic", "pixels", "twilight", "modern", "8bit" });
+        JComboBox<String> themeComboBox = new JComboBox<>(new String[] { "classic", "pixels", "twilight", "modern", "8bit" });
+        String currentTheme = SettingsManager.getSetting("theme", "classic");
+        themeComboBox.setSelectedItem(currentTheme);	
+        System.out.println(currentTheme);
+
         gbc.gridy = 2;
         add(themeComboBox, gbc);
 
@@ -53,7 +57,11 @@ public class SettingsPanel extends JPanel {
         gbc.gridy = 3;
         add(soundLabel, gbc);
 
-        soundComboBox = new JComboBox<>(new String[] { "On", "Off" });
+        JComboBox<String> soundComboBox = new JComboBox<>(new String[] { "On", "Off" });
+        String currentSound = SettingsManager.getSetting("sound", "On");
+        soundComboBox.setSelectedItem(currentSound);
+        System.out.println(currentSound);
+
         gbc.gridy = 4;
         add(soundComboBox, gbc);
 
@@ -64,7 +72,10 @@ public class SettingsPanel extends JPanel {
         gbc.gridy = 5;
         add(clockLabel, gbc);
 
-        clockComboBox = new JComboBox<>(new String[] { "1 minutes" ,"3 minutes", "5 minutes", "10 minutes", "15 minutes" });
+        JComboBox<String> clockComboBox = new JComboBox<>(new String[] { "1 minutes" , "3 minutes", "5 minutes", "10 minutes", "15 minutes" });
+        String currentClock = SettingsManager.getSetting("clock", "1 minutes");
+        clockComboBox.setSelectedItem(currentClock);
+        System.out.println(currentClock);
         gbc.gridy = 6;
         add(clockComboBox, gbc);
 
@@ -73,8 +84,8 @@ public class SettingsPanel extends JPanel {
         saveButton.setFont(new Font("Arial", Font.PLAIN, 18));
         saveButton.setPreferredSize(new Dimension(145, 40));
         saveButton.addActionListener(_ -> {
-        	saveSettings((String) themeComboBox.getSelectedItem(), (String) soundComboBox.getSelectedItem(), (String) clockComboBox.getSelectedItem());
-        	GameLauncher.showMenu();
+            saveSettings((String) themeComboBox.getSelectedItem(), (String) soundComboBox.getSelectedItem(), (String) clockComboBox.getSelectedItem());
+            GameLauncher.showMenu();
         });
         gbc.gridy = 7;
         add(saveButton, gbc);
@@ -86,20 +97,17 @@ public class SettingsPanel extends JPanel {
         backButton.addActionListener(_ -> GameLauncher.showMenu());
         gbc.gridy = 8;
         add(backButton, gbc);
-        SettingsManager.loadSettings();
     }
-    
 
     private void saveSettings(String theme, String sound, String clock) {
         // Implement the logic to save and apply the settings
-    	ThemeManager.setTheme(theme); // Apply the selected themes
-    	SoundManager.setSoundSate(sound);
+        ThemeManager.setTheme(theme); // Apply the selected themes
+        SoundManager.setSoundSate(sound);
         int minutes = Integer.parseInt(clock.split(" ")[0]); // Extract minutes from the selected option
         GameLauncher.getBoard().setDuration(minutes);
         
         SettingsManager.saveSettings("theme", theme);
         SettingsManager.saveSettings("sound", sound);
         SettingsManager.saveSettings("clock", clock);
-		
     }
 }

@@ -40,7 +40,7 @@ public class SettingsManager {
 
     public static String getSetting(String key, String defaultValue) {
         if (settingsDocument == null) {
-            return defaultValue;
+            loadSettings(); // Ensure settings are loaded
         }
 
         NodeList nodeList = settingsDocument.getElementsByTagName(key);
@@ -55,7 +55,7 @@ public class SettingsManager {
         try {
             File file = new File(SETTINGS_FILE);
             if (!file.exists()) {
-            	System.out.println("Not existed");
+                System.out.println("Settings file does not exist. Creating new document.");
                 settingsDocument = createNewDocument();
                 return;
             }
@@ -67,7 +67,6 @@ public class SettingsManager {
             doc.getDocumentElement().normalize();
 
             NodeList nList = doc.getElementsByTagName("settings");
-
             for (int temp = 0; temp < nList.getLength(); temp++) {
                 Node nNode = nList.item(temp);
 
@@ -76,14 +75,18 @@ public class SettingsManager {
 
                     String theme = eElement.getElementsByTagName("theme").item(0).getTextContent();
                     String sound = eElement.getElementsByTagName("sound").item(0).getTextContent();
-                    int clock = Integer.parseInt(eElement.getElementsByTagName("clock").item(0).getTextContent());
-
-                    ThemeManager.setTheme(theme); // Apply the selected theme
-                    SoundManager.setSoundSate(sound);// Apply sound setting logic if needed
-                    GameLauncher.getBoard().setDuration(clock); // Apply the clock setting
+                    String clockStr = eElement.getElementsByTagName("clock").item(0).getTextContent();
+                    int clock = Integer.parseInt(clockStr.split(" ")[0]); 
+                    
+                    ThemeManager.setTheme(theme);
+                    SoundManager.setSoundSate(sound);
+                    GameLauncher.getBoard().setDuration(clock);
                 }
             }
+
+            settingsDocument = doc; 
         } catch (Exception e) {
+            System.out.println("Exception occurred while loading settings: " + e.getMessage());
             // If the settings file does not exist, use default settings
             settingsDocument = createNewDocument();
         }

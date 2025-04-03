@@ -21,6 +21,7 @@ public class GameLauncher {
     private static Board board;
 
 	private static StyledButton homeButton;
+	private static StyledButton settingsButton;
 	private static StyledButton exitButton;
 	
     private static boolean soundEffectsEnabled = true; // Default to enabled
@@ -99,29 +100,34 @@ public class GameLauncher {
         board.setBounds(20, 20, boardSize, boardSize); // Adjust based on your chessboard size
         layeredPane.add(board, Integer.valueOf(1)); // Higher z-index
         
-		homeButton = new StyledButton("Return to Menu", new Color(60, 60, 60), new Color(80, 80, 80), Color.WHITE);
-		exitButton = new StyledButton("Exit", new Color(60, 60, 60), new Color(80, 80, 80), Color.WHITE);
+		homeButton = new StyledButton("Menu", new Color(140, 200, 75), new Color(120, 180, 60), Color.WHITE);
+		settingsButton = new StyledButton("Settings", new Color(140, 200, 75), new Color(120, 180, 60), Color.WHITE);
+		exitButton = new StyledButton("Exit", new Color(240, 60, 60), new Color(240, 80, 80), Color.WHITE);
 
 		homeButton.setBounds(720, 200, 160, 40);
-		exitButton.setBounds(720, 250, 160, 40);
+		settingsButton.setBounds(720, 250, 160, 40);
+		exitButton.setBounds(720, 300, 160, 40);
 
 		homeButton.addActionListener(_ -> {
 			int response = JOptionPane.showConfirmDialog(null, "Are you sure you want to return to the menu?", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (response == JOptionPane.YES_OPTION) {
-                System.out.println("Return to Menu Clicked!");
                 GameLauncher.showMenu();
             }
+		});
+		
+		settingsButton.addActionListener(_ -> {
+            GameLauncher.showSettings();
 		});
 		
 		exitButton.addActionListener(_ -> {
 			int response = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit?", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (response == JOptionPane.YES_OPTION) {
-                System.out.println("Exit Clicked!");
                 System.exit(0);
             }
 		});
 
 		layeredPane.add(homeButton,Integer.valueOf(1));
+		layeredPane.add(settingsButton,Integer.valueOf(1));
 		layeredPane.add(exitButton,Integer.valueOf(1));
         
         if (isBotPlaying) {
