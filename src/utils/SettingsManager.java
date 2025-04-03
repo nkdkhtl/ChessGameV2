@@ -79,7 +79,7 @@ public class SettingsManager {
                     int clock = Integer.parseInt(eElement.getElementsByTagName("clock").item(0).getTextContent());
 
                     ThemeManager.setTheme(theme); // Apply the selected theme
-                    // Apply sound setting logic if needed
+                    SoundManager.setSoundSate(sound);// Apply sound setting logic if needed
                     GameLauncher.getBoard().setDuration(clock); // Apply the clock setting
                 }
             }

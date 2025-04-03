@@ -20,6 +20,10 @@ import utils.ThemeManager;
 public class SettingsPanel extends JPanel {
     private static final long serialVersionUID = 1L;
     GridBagConstraints gbc = new GridBagConstraints();
+    
+    JComboBox<String> themeComboBox;
+    JComboBox<String> soundComboBox;
+    JComboBox<String> clockComboBox;
     public SettingsPanel() {
         setLayout(new GridBagLayout());
         setBackground(new Color(30, 30, 30, 200));
@@ -38,7 +42,7 @@ public class SettingsPanel extends JPanel {
         gbc.insets = new Insets(10, 100, 10, 100);
         add(themeLabel, gbc);
 
-        JComboBox<String> themeComboBox = new JComboBox<>(new String[] { "classic", "pixels", "twilight", "modern", "8bit" });
+        themeComboBox = new JComboBox<>(new String[] { "classic", "pixels", "twilight", "modern", "8bit" });
         gbc.gridy = 2;
         add(themeComboBox, gbc);
 
@@ -49,7 +53,7 @@ public class SettingsPanel extends JPanel {
         gbc.gridy = 3;
         add(soundLabel, gbc);
 
-        JComboBox<String> soundComboBox = new JComboBox<>(new String[] { "On", "Off" });
+        soundComboBox = new JComboBox<>(new String[] { "On", "Off" });
         gbc.gridy = 4;
         add(soundComboBox, gbc);
 
@@ -60,7 +64,7 @@ public class SettingsPanel extends JPanel {
         gbc.gridy = 5;
         add(clockLabel, gbc);
 
-        JComboBox<String> clockComboBox = new JComboBox<>(new String[] { "1 minutes" ,"3 minutes", "5 minutes", "10 minutes", "15 minutes" });
+        clockComboBox = new JComboBox<>(new String[] { "1 minutes" ,"3 minutes", "5 minutes", "10 minutes", "15 minutes" });
         gbc.gridy = 6;
         add(clockComboBox, gbc);
 
@@ -82,9 +86,9 @@ public class SettingsPanel extends JPanel {
         backButton.addActionListener(_ -> GameLauncher.showMenu());
         gbc.gridy = 8;
         add(backButton, gbc);
-        
-        SettingsManager.loadSettings(); 
+        SettingsManager.loadSettings();
     }
+    
 
     private void saveSettings(String theme, String sound, String clock) {
         // Implement the logic to save and apply the settings
