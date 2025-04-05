@@ -24,11 +24,8 @@ public class GameLauncher {
 	private static StyledButton settingsButton;
 	private static StyledButton exitButton;
 	
-    private static boolean soundEffectsEnabled = true; // Default to enabled
-
-
     public static void initialize() {
-        frame = new JFrame("Chét Gêm v1.0");
+        frame = new JFrame("Chet Gem v1.0");
         frame.getContentPane().setBackground(new Color(0, 0, 0, 0));
         frame.setLayout(new GridBagLayout());
         frame.setMinimumSize(new Dimension(960, 720));
