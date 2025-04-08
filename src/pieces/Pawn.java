@@ -4,6 +4,17 @@ import GameLauncher.Board;
 import GameLauncher.Type;
 
 public class Pawn extends Piece {
+    public static final int[][] PAWN_EVALUATION = {
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {5, 10, 10, -20, -20, 10, 10, 5},
+            {5, -5, -10, 0, 0, -10, -5, 5},
+            {0, 0, 0, 20, 20, 0, 0, 0},
+            {5, 5, 10, 25, 25, 10, 5, 5},
+            {10, 10, 20, 30, 30, 20, 10, 10},
+            {50, 50, 50, 50, 50, 50, 50, 50},
+            {0, 0, 0, 0, 0, 0, 0, 0}
+    };
+	
 	public Pawn(Board board,boolean isWhite, int col, int row) {
 		super(board);
 		
@@ -90,4 +101,10 @@ public class Pawn extends Piece {
         
         return false;
     }
+	
+	@Override 
+    public int getPositionValue() {
+        return isWhite ? PAWN_EVALUATION[row][col] : -PAWN_EVALUATION[7 - row][col];
+    }
+
 }

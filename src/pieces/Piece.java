@@ -68,7 +68,7 @@ public abstract class Piece {
     
     public abstract boolean isValidMovement(int col, int row);
     public abstract boolean isCollide(int col, int row);
-    
+    public abstract int getPositionValue();
     public boolean getSquareColor() {
         // true == light
         // black == dark

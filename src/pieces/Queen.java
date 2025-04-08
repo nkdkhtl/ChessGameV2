@@ -4,6 +4,19 @@ import GameLauncher.Board;
 import GameLauncher.Type;
 
 public class Queen extends Piece {
+	
+	private static final int[][] QUEEN_EVALUATION = {
+	        {-20, -10, -10, -5, -5, -10, -10, -20},
+	        {-10, 0, 0, 0, 0, 0, 0, -10},
+	        {-10, 0, 5, 5, 5, 5, 0, -10},
+	        {-5, 0, 5, 5, 5, 5, 0, -5},
+	        {0, 0, 5, 5, 5, 5, 0, -5},
+	        {-10, 5, 5, 5, 5, 5, 0, -10},
+	        {-10, 0, 5, 0, 0, 0, 0, -10},
+	        {-20, -10, -10, -5, -5, -10, -10, -20}
+	};
+	
+	
 	public Queen(Board board,boolean isWhite, int col, int row) {
 		super(board);
 		type = Type.QUEEN;
@@ -106,5 +119,11 @@ public class Queen extends Piece {
 		
 		return false;
 	}
+	
+	
+    @Override
+    public int getPositionValue() {
+        return isWhite ? QUEEN_EVALUATION[row][col] : -QUEEN_EVALUATION[7 - row][col];
+    }
 	
 }

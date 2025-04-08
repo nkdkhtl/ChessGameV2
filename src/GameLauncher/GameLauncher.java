@@ -21,7 +21,6 @@ public class GameLauncher {
     private static Board board;
 
 	private static StyledButton homeButton;
-	private static StyledButton settingsButton;
 	private static StyledButton exitButton;
 	
     public static void initialize() {
@@ -98,22 +97,16 @@ public class GameLauncher {
         layeredPane.add(board, Integer.valueOf(1)); // Higher z-index
         
 		homeButton = new StyledButton("Menu", new Color(140, 200, 75), new Color(120, 180, 60), Color.WHITE);
-		settingsButton = new StyledButton("Settings", new Color(140, 200, 75), new Color(120, 180, 60), Color.WHITE);
-		exitButton = new StyledButton("Exit", new Color(240, 60, 60), new Color(240, 80, 80), Color.WHITE);
+		exitButton = new StyledButton("Exit", new Color(220, 60, 60), new Color(220, 80, 80), Color.WHITE);
 
 		homeButton.setBounds(720, 200, 160, 40);
-		settingsButton.setBounds(720, 250, 160, 40);
-		exitButton.setBounds(720, 300, 160, 40);
+		exitButton.setBounds(720, 250, 160, 40);
 
 		homeButton.addActionListener(_ -> {
 			int response = JOptionPane.showConfirmDialog(null, "Are you sure you want to return to the menu?", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (response == JOptionPane.YES_OPTION) {
                 GameLauncher.showMenu();
             }
-		});
-		
-		settingsButton.addActionListener(_ -> {
-            GameLauncher.showSettings();
 		});
 		
 		exitButton.addActionListener(_ -> {
@@ -124,7 +117,6 @@ public class GameLauncher {
 		});
 
 		layeredPane.add(homeButton,Integer.valueOf(1));
-		layeredPane.add(settingsButton,Integer.valueOf(1));
 		layeredPane.add(exitButton,Integer.valueOf(1));
         
         if (isBotPlaying) {

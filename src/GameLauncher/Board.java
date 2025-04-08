@@ -60,7 +60,7 @@ public class Board extends JPanel {
 	public static int duration = 10;
 
 	// state
-	protected boolean isWhiteToMove = true;
+	public boolean isWhiteToMove = true;
 
 	private Bot bot;
 	private boolean isBotPlaying = false;

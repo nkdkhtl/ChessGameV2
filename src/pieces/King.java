@@ -5,6 +5,18 @@ import GameLauncher.Movements;
 import GameLauncher.Type;
 
 public class King extends Piece {
+	
+	private static final int[][] KING_EVALUATION = {
+	        {-30, -40, -40, -50, -50, -40, -40, -30},
+	        {-30, -40, -40, -50, -50, -40, -40, -30},
+	        {-30, -40, -40, -50, -50, -40, -40, -30},
+	        {-30, -40, -40, -50, -50, -40, -40, -30},
+	        {-20, -30, -30, -40, -40, -30, -30, -20},
+	        {-10, -20, -20, -20, -20, -20, -20, -10},
+	        {20, 20, 0, 0, 0, 0, 20, 20},
+	        {20, 30, 10, 0, 0, 10, 30, 20}
+	};
+	
 	public King(Board board,boolean isWhite, int col, int row) {
 		super(board);
 		type = Type.KING;
@@ -65,6 +77,8 @@ public class King extends Piece {
 		return false;
 	}
 	
-	
-	
+    @Override
+    public int getPositionValue() {
+        return isWhite ? KING_EVALUATION[row][col] : -KING_EVALUATION[7 - row][col];
+    }
 }
