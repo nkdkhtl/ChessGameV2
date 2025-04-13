@@ -46,7 +46,7 @@ public abstract class Piece {
         return isWhite;
     }
     
-    Board board;
+    public Board board;
     public Piece(Board board) {
         this.board = board;
     }

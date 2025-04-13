@@ -8,7 +8,7 @@ public class Movements {
 	public int newCol;
 	public int newRow;
 	public Piece piece;
-	Piece capture;
+	public Piece capture;
 	
 	public Movements(Board board,Piece piece,int newCol,int newRow) {
 

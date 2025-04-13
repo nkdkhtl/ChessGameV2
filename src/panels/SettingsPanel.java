@@ -49,7 +49,7 @@ public class SettingsPanel extends JPanel {
 
         gbc.gridy = 2;
         add(themeComboBox, gbc);
-
+        
         // Sound effects settings
         JLabel soundLabel = new JLabel("Sound Effects:");
         soundLabel.setForeground(Color.WHITE);
