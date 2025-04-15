@@ -37,6 +37,9 @@ public class Board extends JPanel {
 	private static final long serialVersionUID = 1L;
 	public static final int SQUARE_SIZE = 80;
 	public static final int BOARD_RADIUS = 40;
+	public boolean isResign = false;
+	public boolean isDraw = false;
+
 	public int cols = 8;
 	public int rows = 8;
 	public Color primary = new Color(235, 236, 208);
@@ -92,7 +95,7 @@ public class Board extends JPanel {
 		this.addMouseMotionListener(input);
 		this.setOpaque(false);
 		timerPanel = new TimerPanel(duration);
-		timerPanel.setBounds(720, 50, 160, 100);
+		timerPanel.setBounds(700, 50, 160, 100);
 		this.add(timerPanel);
 
 		whiteTimer = new ChessTimer(this, timerPanel, true, duration);
@@ -137,6 +140,13 @@ public class Board extends JPanel {
 	}
 	public Stack<String> getMoveHistory() {
 		return moveHistory;
+	}
+	
+	public void setIsResign(boolean b) {
+		isResign = b;
+	}
+	public void setIsDraw(boolean b) {
+		isDraw = b;
 	}
 
 	public void enableBot(boolean isBotPlaying, boolean isHardMode, boolean isWhiteBot) {
@@ -196,7 +206,7 @@ public class Board extends JPanel {
 					makeMove(actualMove);
 				}
 			}
-		}, 500); // Add delay for realism
+		}, 300); // Add delay for realism
 	}
 
 	public void makeMove(Movements move) {
@@ -474,6 +484,16 @@ public class Board extends JPanel {
 	public void updateGame() {
 		Piece king = findKing(isWhiteToMove);
 		
+		
+		if (isResign) {
+			String result = isWhiteToMove ? "Black" : "White";
+			endGame(result + " Wins!", "Opponent resigned");
+		}
+		
+		if (isDraw) {
+			endGame("Stalemate!", "Opponent approved");
+		}
+		
 		checkFinder.recordPosition(checkFinder.getBoardState(this));
 		if (checkFinder.isCheckmate(king)) {
 			if (checkFinder.isKingInCheck(new Movements(this, king, king.col, king.row))) {
@@ -499,7 +519,7 @@ public class Board extends JPanel {
 			endGame("Stalemate!", "50 Move Rule");
 		}
 
-		if (checkFinder.isStalemate(king)) {
+		if (checkFinder.isStalemate(king) && !isResign && !isDraw) {
 			if (!checkFinder.isKingInCheck(new Movements(this, king, king.col, king.row))) {
 				endGame("Stalemate!", "No legal move");
 			}
@@ -522,8 +542,11 @@ public class Board extends JPanel {
 		selectedPiece = null;
 		validMoves.clear();
 		enPassantSquare = -1;
+		checkFinder.positionHistory.clear();
 		isWhiteToMove = true;
 		isGameOver = false;
+		isResign = false;
+		isDraw = false;
 
 		whiteTimer.reset(10); // Reset White's timer
 		blackTimer.reset(10); // Reset Black's timer
@@ -578,6 +601,7 @@ public class Board extends JPanel {
 
 		g2d.setClip(null);
 	}
+
 
 
 }

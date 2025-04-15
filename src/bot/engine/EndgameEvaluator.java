@@ -139,6 +139,7 @@ public class EndgameEvaluator implements GamePhaseEvaluator {
                     else blackBishops++;
                     eval += evaluateBishopEndgame(board, piece);
                 }
+			default -> throw new IllegalArgumentException("Unexpected value: " + piece.type);
             }
         }
         
@@ -193,7 +194,6 @@ public class EndgameEvaluator implements GamePhaseEvaluator {
     }
     
     private boolean isProtectedPawn(Board board, Piece pawn) {
-        int supportCol = pawn.col - 1;
         int supportRow = pawn.isWhite ? pawn.row + 1 : pawn.row - 1;
         
         for (int c = Math.max(0, pawn.col - 1); c <= Math.min(7, pawn.col + 1); c++) {

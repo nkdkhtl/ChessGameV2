@@ -15,7 +15,6 @@ public class OpeningEvaluator implements GamePhaseEvaluator {
     private static final int FIANCHETTO_BONUS = 15;
     
     // Center squares for piece development evaluation
-    private static final int[] CENTER_SQUARES = {27, 28, 35, 36}; // d4,e4,d5,e5
     private static final int[] EXTENDED_CENTER = {
         18, 19, 20, 21,  // c3,d3,e3,f3
         26, 27, 28, 29,  // c4,d4,e4,f4

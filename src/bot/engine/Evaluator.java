@@ -3,11 +3,7 @@ package bot.engine;
 import GameLauncher.Board;
 import pieces.Piece;
 
-/**
- * Position evaluation engine
- * @author nkdkhtl
- * @version 2025-04-13
- */
+
 public class Evaluator {
     // Piece values
     private static final int PAWN_VALUE = 100;
@@ -17,11 +13,7 @@ public class Evaluator {
     private static final int QUEEN_VALUE = 900;
     private static final int KING_VALUE = 10000;
     
-    // Positional bonuses
-    private static final int CENTER_PAWN_BONUS = 40;
-    private static final int DEVELOPMENT_BONUS = 30;
-    private static final int EARLY_QUEEN_PENALTY = -30;
-    private static final int KING_SAFETY_BONUS = 50;
+
     
     private final GamePhaseEvaluator openingEval;
     private final GamePhaseEvaluator middlegameEval;

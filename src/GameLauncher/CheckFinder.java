@@ -7,7 +7,7 @@ import pieces.Piece;
 public class CheckFinder {
     Board board;
     public static int halfMoveClock = 0;
-    private HashMap<String, Integer> positionHistory = new HashMap<>();
+    protected HashMap<String, Integer> positionHistory = new HashMap<>();
     
     public CheckFinder(Board board) {
         this.board = board;

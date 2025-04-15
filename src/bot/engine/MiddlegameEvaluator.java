@@ -60,6 +60,7 @@ public class MiddlegameEvaluator implements GamePhaseEvaluator {
                     eval += evaluateRook(board, piece);
                 }
                 case KNIGHT -> eval += evaluateKnight(board, piece);
+			default -> throw new IllegalArgumentException("Unexpected value: " + piece.type);
             }
         }
         
@@ -325,7 +326,6 @@ public class MiddlegameEvaluator implements GamePhaseEvaluator {
     
     private int evaluatePawnShield(Board board, Piece king) {
         int safety = 0;
-        int baseRank = king.isWhite ? 7 : 0;
         int pawnRank = king.isWhite ? 6 : 1;
         
         // Check pawns in front of king

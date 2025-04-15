@@ -13,7 +13,7 @@ import pieces.Piece;
  */
 public class SearchEngine {
     private final Evaluator evaluator;
-    private static final int MAX_DEPTH = 10;
+    private static final int MAX_DEPTH = 6;
     
     public SearchEngine() {
         this.evaluator = new Evaluator();
@@ -29,10 +29,16 @@ public class SearchEngine {
         int moveNumber = board.getFullmoveNumber();
         int pieces = board.pieceList.size();
         
-        if (moveNumber <= 10 || pieces <= 10) {
-            return MAX_DEPTH;
+        // Use a lower depth in early game and when there are many pieces
+        if (moveNumber <= 10 || pieces >= 20) {
+            return 4;
         }
-        return MAX_DEPTH - 1;
+        // Use medium depth in middle game
+        if (pieces >= 10) {
+            return 5;
+        }
+        // Only use max depth in endgame with few pieces
+        return MAX_DEPTH;
     }
     
     private SearchResult alphaBeta(Board board, int depth, int alpha, int beta, boolean maximizing) {

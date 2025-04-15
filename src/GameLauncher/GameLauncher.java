@@ -22,7 +22,9 @@ public class GameLauncher {
 
 	private static StyledButton homeButton;
 	private static StyledButton exitButton;
-	
+	private static StyledButton drawButton;
+	private static StyledButton resignButton;
+
     public static void initialize() {
         frame = new JFrame("Chet Gem v1.0");
         frame.getContentPane().setBackground(new Color(0, 0, 0, 0));
@@ -96,12 +98,33 @@ public class GameLauncher {
         board.setBounds(20, 20, boardSize, boardSize); // Adjust based on your chessboard size
         layeredPane.add(board, Integer.valueOf(1)); // Higher z-index
         
-		homeButton = new StyledButton("Menu", new Color(140, 200, 75), new Color(120, 180, 60), Color.WHITE);
+        drawButton = new StyledButton("Draw", new Color(60, 60, 60), new Color(80, 80, 80), Color.WHITE);
+        resignButton = new StyledButton("Resign", new Color(60, 60, 60), new Color(80, 80, 80), Color.WHITE);
+        homeButton = new StyledButton("Menu", new Color(140, 200, 75), new Color(120, 180, 60), Color.WHITE);
 		exitButton = new StyledButton("Exit", new Color(220, 60, 60), new Color(220, 80, 80), Color.WHITE);
 
-		homeButton.setBounds(720, 200, 160, 40);
-		exitButton.setBounds(720, 250, 160, 40);
+		
+		drawButton.setBounds(720, 200, 160, 40);
+		resignButton.setBounds(720, 250, 160, 40);
+		homeButton.setBounds(720, 300, 160, 40);
+		exitButton.setBounds(720, 350, 160, 40);
 
+		resignButton.addActionListener(_ -> {
+			int response = JOptionPane.showConfirmDialog(null, "Are you sure you want to resign?", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (response == JOptionPane.YES_OPTION) {
+            	board.setIsResign(true);
+            	board.updateGame();
+            }
+		});
+		
+		drawButton.addActionListener(_ -> {
+			int response = JOptionPane.showConfirmDialog(null, "Are you sure you want to draw?", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (response == JOptionPane.YES_OPTION) {
+            	board.setIsDraw(true);
+            	board.updateGame();
+            }
+		});
+		
 		homeButton.addActionListener(_ -> {
 			int response = JOptionPane.showConfirmDialog(null, "Are you sure you want to return to the menu?", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (response == JOptionPane.YES_OPTION) {
@@ -115,7 +138,8 @@ public class GameLauncher {
                 System.exit(0);
             }
 		});
-
+		layeredPane.add(drawButton,Integer.valueOf(1));
+		layeredPane.add(resignButton,Integer.valueOf(1));
 		layeredPane.add(homeButton,Integer.valueOf(1));
 		layeredPane.add(exitButton,Integer.valueOf(1));
         
