@@ -34,6 +34,6 @@ public abstract class Bot {
         }
         return legalMoves;
     }
-        
+
     public abstract Movements getMove();
 }

@@ -8,11 +8,7 @@ import GameLauncher.Movements;
 import GameLauncher.Type;
 import pieces.Piece;
 
-/**
- * Evaluator for middlegame positions
- * @author nkdkhtl
- * @version 2025-04-13
- */
+
 public class MiddlegameEvaluator implements GamePhaseEvaluator {
     // Piece coordination bonuses
     private static final int BISHOP_PAIR_BONUS = 50;

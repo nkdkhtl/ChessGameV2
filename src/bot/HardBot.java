@@ -4,11 +4,6 @@ import GameLauncher.Board;
 import GameLauncher.Movements;
 import bot.engine.SearchEngine;
 
-/**
- * Advanced chess bot implementation
- * @author nkdkhtl
- * @version 2025-04-13
- */
 public class HardBot extends Bot {
     private final SearchEngine engine;
     

@@ -67,6 +67,7 @@ public class Board extends JPanel {
 
 	private Bot bot;
 	private boolean isBotPlaying = false;
+	private boolean isWhiteBot;
 	private boolean isPromoting = false;
 	public boolean isGameOver = false;
 
@@ -102,7 +103,7 @@ public class Board extends JPanel {
 		blackTimer = new ChessTimer(this, timerPanel, false, duration);
 
 		addPieces(initFEN);
-
+		
 
 
 		gameOverPanel = new GameOverPanel(this, "");
@@ -151,6 +152,7 @@ public class Board extends JPanel {
 
 	public void enableBot(boolean isBotPlaying, boolean isHardMode, boolean isWhiteBot) {
 		this.isBotPlaying = true;
+		this.isWhiteBot = isWhiteBot;
 		if (isHardMode) {
 			this.bot = new HardBot(this, true, isWhiteBot);
 		} else {
@@ -350,9 +352,9 @@ public class Board extends JPanel {
 		// white == 0
 		// black == 7
 		colorIdx = move.piece.isWhite ? 0 : 7;
-		if (move.newRow == colorIdx) {
-			promotion(move);
-			return;
+		if (move.newRow == colorIdx && move.piece.type == Type.PAWN) { // Add a check for pawn type
+		    promotion(move);
+		    return;
 		}
 
 		move.piece.col = move.newCol;
@@ -370,36 +372,54 @@ public class Board extends JPanel {
 	}
 
 	private void promotion(Movements move) {
-		isPromoting = true;
-		SwingUtilities.invokeLater(() -> {
-			PromotionPanel panel = new PromotionPanel((JFrame) SwingUtilities.getWindowAncestor(this),
-					move.piece.isWhite);
-			String choice = panel.getSelectedPiece();
+	    isPromoting = true;
 
-			Piece newPiece;
-			switch (choice) {
-				case "Rook":
-					newPiece = new Rook(this, move.piece.isWhite, move.newCol, move.newRow);
-					break;
-				case "Bishop":
-					newPiece = new Bishop(this, move.piece.isWhite, move.newCol, move.newRow);
-					break;
-				case "Knight":
-					newPiece = new Knight(this, move.piece.isWhite, move.newCol, move.newRow);
-					break;
-				default:
-					newPiece = new Queen(this, move.piece.isWhite, move.newCol, move.newRow);
-					break;
-			}
+		// Check if the move is being made by the bot
+	    if (((isWhiteBot && isWhiteToMove) || (!isWhiteBot && !isWhiteToMove)) && isBotPlaying) {	
+	        // Automatically promote to Queen for the bot
+	        Piece newPiece = new Queen(this, move.piece.isWhite, move.newCol, move.newRow);
 
-			pieceList.remove(move.piece);
-			pieceList.add(newPiece);
-			capture(move.capture);
-			isPromoting = false;
-			makeBotMove();
-			updateGame();
-			repaint();
-		});
+	        pieceList.remove(move.piece);
+	        pieceList.add(newPiece);
+	        capture(move.capture);
+	        isPromoting = false;
+
+	        // Continue with the bot's move
+	        makeBotMove();
+	        updateGame();
+	        repaint();
+	    } else {
+	        // Human player promotion logic
+	        SwingUtilities.invokeLater(() -> {
+	            PromotionPanel panel = new PromotionPanel((JFrame) SwingUtilities.getWindowAncestor(this),
+	                    move.piece.isWhite);
+	            String choice = panel.getSelectedPiece();
+
+	            Piece newPiece;
+	            switch (choice) {
+	                case "Rook":
+	                    newPiece = new Rook(this, move.piece.isWhite, move.newCol, move.newRow);
+	                    break;
+	                case "Bishop":
+	                    newPiece = new Bishop(this, move.piece.isWhite, move.newCol, move.newRow);
+	                    break;
+	                case "Knight":
+	                    newPiece = new Knight(this, move.piece.isWhite, move.newCol, move.newRow);
+	                    break;
+	                default:
+	                    newPiece = new Queen(this, move.piece.isWhite, move.newCol, move.newRow);
+	                    break;
+	            }
+
+	            pieceList.remove(move.piece);
+	            pieceList.add(newPiece);
+	            capture(move.capture);
+	            isPromoting = false;
+	            makeBotMove();
+	            updateGame();
+	            repaint();
+	        });
+	    }
 	}
 
 	public void capture(Piece piece) {
