@@ -16,6 +16,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import GameLauncher.GameLauncher;
+import bot.Bot;
 
 public class SettingsManager {
     private static final String SETTINGS_FILE = "settings.xml";
@@ -76,11 +77,14 @@ public class SettingsManager {
                     String theme = eElement.getElementsByTagName("theme").item(0).getTextContent();
                     String sound = eElement.getElementsByTagName("sound").item(0).getTextContent();
                     String clockStr = eElement.getElementsByTagName("clock").item(0).getTextContent();
+                    String botColor = eElement.getElementsByTagName("botColor").item(0).getTextContent();
+                    System.out.printf("%s %s",botColor,"white");
                     int clock = Integer.parseInt(clockStr.split(" ")[0]); 
                     
                     ThemeManager.setTheme(theme);
                     SoundManager.setSoundSate(sound);
                     GameLauncher.getBoard().setDuration(clock);
+                    Bot.setBotColor((botColor.equals("white")) ? true : false);
                 }
             }
 

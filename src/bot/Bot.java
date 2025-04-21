@@ -8,13 +8,22 @@ import pieces.Piece;
 
 public abstract class Bot {
     protected final Board board;
-    public boolean isWhiteBot;
+    public static boolean isWhiteBot;
     public boolean isHardMode;
 
     public Bot(Board board, boolean isHardMode, boolean isWhiteBot) {
         this.board = board;
         this.isHardMode = isHardMode;
         this.isWhiteBot = isWhiteBot;
+    }
+    
+    public static void setBotColor(boolean b) {
+    	isWhiteBot = b;
+    	System.out.println(isWhiteBot);
+    }
+    
+    public static boolean getBotColor() {
+    	return isWhiteBot;
     }
 
     public List<Movements> getAllLegalMoves(Board virtualBoard) {

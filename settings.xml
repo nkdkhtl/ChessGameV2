@@ -1,18 +1,47 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <settings>
-                
+                                    
     
     
-    <theme>pixels</theme>
-                
+    
+    
+    
+    
+    
+    <theme>classic</theme>
+                                    
+    
+    
+    
+    
+    
+    
+    
+    <botColor>black</botColor>
+                                    
+    
+    
+    
+    
+    
     
     
     <sound>On</sound>
-                
+                                    
     
     
-    <clock>10 minutes</clock>
-            
+    
+    
+    
+    
+    
+    <clock>1 minutes</clock>
+                                
+
+
+
+
+
 
 
 </settings>

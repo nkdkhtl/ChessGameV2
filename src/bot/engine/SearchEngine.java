@@ -31,11 +31,11 @@ public class SearchEngine {
         
         // Use a lower depth in early game and when there are many pieces
         if (moveNumber <= 10 || pieces >= 20) {
-            return 4;
+            return 6;
         }
         // Use medium depth in middle game
         if (pieces >= 10) {
-            return 5;
+            return 10;
         }
         // Only use max depth in endgame with few pieces
         return MAX_DEPTH;

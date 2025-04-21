@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 
+import bot.Bot;
 import panels.GameMenuPanel;
 import panels.GameModePanel;
 import panels.SettingsPanel;
@@ -19,6 +20,7 @@ public class GameLauncher {
     private static JFrame frame;
     private static BackgroundPanel backgroundPanel;
     private static Board board;
+    public static boolean botColor;
 
 	private static StyledButton homeButton;
 	private static StyledButton exitButton;
@@ -144,12 +146,13 @@ public class GameLauncher {
 		layeredPane.add(exitButton,Integer.valueOf(1));
         
         if (isBotPlaying) {
-            board.enableBot(true, isHardMode, false); // Enable EasyBot or HardBot
+            board.enableBot(true, isHardMode, Bot.getBotColor()); // Enable EasyBot or HardBot
         }
 
         frame.revalidate();
         frame.repaint();
     }
+    
 
     public static Board getBoard() {
         return board;

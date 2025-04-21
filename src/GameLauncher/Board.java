@@ -45,7 +45,12 @@ public class Board extends JPanel {
 	public Color primary = new Color(235, 236, 208);
 	public Color secondary = new Color(119, 149, 86);
 
+	
+	//board init
 	public String initFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+	public String queenCheckmate = "8/8/8/3K1/3Q4/8/8/4k3 w - - 0 1";
+	public String kingStalemate = "8/4b/8/8/8/8/5k/7K w - - 0 1";
+	
 	public ArrayList<Piece> pieceList = new ArrayList<>();
 
 	public Piece selectedPiece;
@@ -104,7 +109,8 @@ public class Board extends JPanel {
 		blackTimer = new ChessTimer(this, timerPanel, false, duration);
 
 		addPieces(initFEN);
-		
+//		addPieces(queenCheckmate);
+//		addPieces(kingStalemate);
 
 
 		gameOverPanel = new GameOverPanel(this, "");
@@ -159,6 +165,10 @@ public class Board extends JPanel {
             this.bot = new HardBot(this, true, isWhiteBot);
         } else {
             this.bot = new EasyBot(this, false, isWhiteBot);
+        }
+        
+        if (isBotPlaying && isWhiteBot && isWhiteToMove) {
+            makeBotMove();
         }
     }
 

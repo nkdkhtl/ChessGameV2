@@ -22,6 +22,7 @@ public class Movements {
 		
 	}
 	
+	
 	private static String getEnPassantSquare(Board board) {
 	    Movements lastMove = board.getLastMove();
 	    if (lastMove != null && lastMove.piece.type == Type.PAWN) {
