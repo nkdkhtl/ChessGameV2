@@ -13,7 +13,7 @@ import pieces.Piece;
  */
 public class SearchEngine {
     private final Evaluator evaluator;
-    private static final int MAX_DEPTH = 6;
+    private static final int MAX_DEPTH = 20;
     
     public SearchEngine() {
         this.evaluator = new Evaluator();
