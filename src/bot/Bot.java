@@ -19,7 +19,6 @@ public abstract class Bot {
     
     public static void setBotColor(boolean b) {
     	isWhiteBot = b;
-    	System.out.println(isWhiteBot);
     }
     
     public static boolean getBotColor() {

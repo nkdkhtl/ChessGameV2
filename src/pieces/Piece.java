@@ -18,7 +18,6 @@ public abstract class Piece {
     public boolean isWhite;
     public int value;
     private boolean highlight = false;
-
     public boolean isFirstMove = true;
 
     public Piece(Board board, boolean isWhite, int col, int row) {
@@ -27,6 +26,8 @@ public abstract class Piece {
         this.col = col;
         this.row = row;
     }
+    
+
 
     public BufferedImage image;
  	public BufferedImage getImage(String imagePath) {

@@ -50,7 +50,7 @@ public class Board extends JPanel {
 	public String initFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 	public String queenCheckmate = "8/8/8/3K1/3Q4/8/8/4k3 w - - 0 1";
 	public String kingStalemate = "8/4b/8/8/8/8/5k/7K w - - 0 1";
-	
+	public String rookMovements = "p2/p/8/8/5R/8/1k/7K w - - 0 1";
 	public ArrayList<Piece> pieceList = new ArrayList<>();
 
 	public Piece selectedPiece;
@@ -93,7 +93,6 @@ public class Board extends JPanel {
 
 
 	public Board() {
-		System.out.println("Board instance created: " + boardId);
 		this.setOpaque(true);
 		this.setBackground(Color.RED);
 		this.setPreferredSize(new Dimension(cols * SQUARE_SIZE, rows * SQUARE_SIZE));
@@ -111,6 +110,7 @@ public class Board extends JPanel {
 		addPieces(initFEN);
 //		addPieces(queenCheckmate);
 //		addPieces(kingStalemate);
+//		addPieces(rookMovements);
 
 
 		gameOverPanel = new GameOverPanel(this, "");
@@ -160,7 +160,6 @@ public class Board extends JPanel {
 	public void enableBot(boolean isBotPlaying, boolean isHardMode, boolean isWhiteBot) {
         this.isBotPlaying = isBotPlaying;
         this.isWhiteBot = isWhiteBot;
-        System.out.println("enableBot called: isBotPlaying = " + this.isBotPlaying); // Debug log
         if (isHardMode) {
             this.bot = new HardBot(this, true, isWhiteBot);
         } else {
@@ -199,8 +198,6 @@ public class Board extends JPanel {
 				if (!isPromoting) {
 
 					Movements virtualMove = bot.getMove(); // Get bot move (from virtual board)
-					System.out.printf("MOVE: %s (%d, %d) -> (%d, %d) \n", virtualMove.piece.type, virtualMove.oldCol,
-							virtualMove.oldRow, virtualMove.newCol, virtualMove.newRow);
 					Piece actualPiece = null;
 					for (Piece p : pieceList) { // Loop through actual board pieces
 						if (p.isWhite == bot.isWhiteBot) {
@@ -229,9 +226,7 @@ public class Board extends JPanel {
 
 	public void makeMove(Movements move) {
 
-        System.out.println("makeMove called: isBotPlaying = " + isBotPlaying); // Debug log
         if (bot == null && isBotPlaying) {
-            System.out.println("Bot is not initialized: cannot make a move.");
             return; // Prevent null pointer exception
         }
 		setLastMove(move);
@@ -391,7 +386,6 @@ public class Board extends JPanel {
 
 	private void promotion(Movements move) {
 	    isPromoting = true;
-        System.out.println("promotion called: isBotPlaying = " + isBotPlaying); // Debug log
 
 	    // Check if the move is being made by the bot
 	    if (isBotPlaying && isWhiteBot == isWhiteToMove) {    
@@ -402,7 +396,6 @@ public class Board extends JPanel {
 	        pieceList.add(newPiece);
 	        capture(move.capture);
 	        isPromoting = false;
-
 	        // Continue with the bot's move
 	        updateGame();
 	        repaint();
@@ -415,20 +408,19 @@ public class Board extends JPanel {
 
 	            Piece newPiece;
 	            switch (choice) {
-	                case "Rook":
+	                case "r":
 	                    newPiece = new Rook(this, move.piece.isWhite, move.newCol, move.newRow);
 	                    break;
-	                case "Bishop":
+	                case "b":
 	                    newPiece = new Bishop(this, move.piece.isWhite, move.newCol, move.newRow);
 	                    break;
-	                case "Knight":
+	                case "k":
 	                    newPiece = new Knight(this, move.piece.isWhite, move.newCol, move.newRow);
 	                    break;
 	                default:
 	                    newPiece = new Queen(this, move.piece.isWhite, move.newCol, move.newRow);
 	                    break;
 	            }
-
 	            pieceList.remove(move.piece);
 	            pieceList.add(newPiece);
 	            capture(move.capture);
@@ -575,7 +567,6 @@ public class Board extends JPanel {
 	}
 
 	public void resetBoard() {
-        System.out.println("resetBoard called: isBotPlaying = " + isBotPlaying); // Debug log
 
 		pieceList.clear();
 		addPieces(initFEN);

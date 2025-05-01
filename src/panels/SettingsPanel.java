@@ -59,7 +59,6 @@ public class SettingsPanel extends JPanel {
         JComboBox<String> themeComboBox = new JComboBox<>(new String[] { "classic", "pixels", "twilight", "modern", "8bit" });
         String currentTheme = SettingsManager.getSetting("theme", "classic");
         themeComboBox.setSelectedItem(currentTheme);	
-        System.out.println(currentTheme);
         gbc.gridx = 1;
         gbc.gridy = 1;
         add(themeComboBox, gbc);
@@ -75,7 +74,6 @@ public class SettingsPanel extends JPanel {
         JComboBox<String> botColorComboBox = new JComboBox<>(new String[] { "black", "white"});
         String currentBotColor = SettingsManager.getSetting("botColor", "black");
         themeComboBox.setSelectedItem(currentBotColor);	
-        System.out.println(currentBotColor);
         gbc.gridx = 1;
         gbc.gridy = 2;
         add(botColorComboBox, gbc);
@@ -91,7 +89,6 @@ public class SettingsPanel extends JPanel {
         JComboBox<String> soundComboBox = new JComboBox<>(new String[] { "On", "Off" });
         String currentSound = SettingsManager.getSetting("sound", "On");
         soundComboBox.setSelectedItem(currentSound);
-        System.out.println(currentSound);
         gbc.gridx = 1;
         gbc.gridy = 3;
         add(soundComboBox, gbc);
@@ -107,7 +104,6 @@ public class SettingsPanel extends JPanel {
         JComboBox<String> clockComboBox = new JComboBox<>(new String[] { "1 minutes" , "3 minutes", "5 minutes", "10 minutes", "15 minutes" });
         String currentClock = SettingsManager.getSetting("clock", "1 minutes");
         clockComboBox.setSelectedItem(currentClock);
-        System.out.println(currentClock);
         gbc.gridx = 1;
         gbc.gridy = 4;
         add(clockComboBox, gbc);

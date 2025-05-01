@@ -56,7 +56,6 @@ public class SettingsManager {
         try {
             File file = new File(SETTINGS_FILE);
             if (!file.exists()) {
-                System.out.println("Settings file does not exist. Creating new document.");
                 settingsDocument = createNewDocument();
                 return;
             }
@@ -78,7 +77,6 @@ public class SettingsManager {
                     String sound = eElement.getElementsByTagName("sound").item(0).getTextContent();
                     String clockStr = eElement.getElementsByTagName("clock").item(0).getTextContent();
                     String botColor = eElement.getElementsByTagName("botColor").item(0).getTextContent();
-                    System.out.printf("%s %s",botColor,"white");
                     int clock = Integer.parseInt(clockStr.split(" ")[0]); 
                     
                     ThemeManager.setTheme(theme);
@@ -90,7 +88,6 @@ public class SettingsManager {
 
             settingsDocument = doc; 
         } catch (Exception e) {
-            System.out.println("Exception occurred while loading settings: " + e.getMessage());
             // If the settings file does not exist, use default settings
             settingsDocument = createNewDocument();
         }

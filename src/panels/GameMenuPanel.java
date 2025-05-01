@@ -60,7 +60,6 @@ public class GameMenuPanel extends JPanel {
         exitButton.addActionListener(_ -> {
 			int response = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit?", "Chét Gêm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         	if (response == JOptionPane.YES_OPTION) {
-                System.out.println("Exit Clicked!");
                 System.exit(0);
             }
         });

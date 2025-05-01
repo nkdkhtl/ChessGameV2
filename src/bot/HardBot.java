@@ -14,16 +14,7 @@ public class HardBot extends Bot {
     
     @Override
     public Movements getMove() {
-        System.out.println("HardBot is thinking...");
         Movements bestMove = engine.findBestMove(board.deepCopy(), isWhiteBot);
-        System.out.println("Move found: " + describeMove(bestMove));
         return bestMove;
-    }
-    
-    private String describeMove(Movements move) {
-        return String.format("%s (%d,%d) -> (%d,%d)",
-            move.piece.type,
-            move.oldCol, move.oldRow,
-            move.newCol, move.newRow);
     }
 }
